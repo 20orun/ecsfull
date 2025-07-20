@@ -1,0 +1,131 @@
+.footer {
+  background: linear-gradient(135deg, #004d7a 0%, #008170 100%);
+  color: white;
+  padding: 3rem 0 1rem;
+  margin-top: auto;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: white;
+  font-weight: 600;
+}
+
+.footer-section h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #ecf0f1;
+  font-weight: 500;
+}
+
+.footer-section p {
+  line-height: 1.6;
+  color: #bdc3c7;
+  margin-bottom: 1rem;
+}
+
+.motto {
+  background: linear-gradient(135deg, #008170, #004d7a);
+  padding: 1rem;
+  border-radius: 10px;
+  font-style: italic;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+  color: #bdc3c7;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+  color: #008170;
+}
+
+.contact-info p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid #34495e;
+  padding-top: 1rem;
+}
+
+.footer-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #008170, transparent);
+  margin-bottom: 1rem;
+}
+
+.footer-credits {
+  text-align: center;
+  color: #95a5a6;
+}
+
+.footer-credits p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.credit-link {
+  color: #008170;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.credit-link:hover {
+  color: #004d7a;
+  text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 768px) {
+  .footer {
+    padding: 2rem 0 1rem;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .footer-section {
+    text-align: center;
+  }
+  
+  .footer-section h3 {
+    font-size: 1.3rem;
+  }
+  
+  .footer-section h4 {
+    font-size: 1.1rem;
+  }
+}

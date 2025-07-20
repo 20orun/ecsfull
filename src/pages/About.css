@@ -1,0 +1,255 @@
+.about {
+  min-height: 100vh;
+}
+
+.about-hero {
+  background: linear-gradient(135deg, #004d7a 0%, #008170 100%);
+  color: white;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.about-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.about-hero p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.about-content {
+  padding: 4rem 0;
+  background-color: #f8f9fa;
+}
+
+.about-text h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.about-text p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #5a6c7d;
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+.highlight {
+  background: linear-gradient(135deg, #008170, #004d7a);
+  color: white;
+  padding: 2rem;
+  border-radius: 15px;
+  margin: 2rem 0;
+  text-align: center;
+  font-size: 1.1rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.mission {
+  padding: 4rem 0;
+  background-color: white;
+}
+
+.mission h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.mission-statement {
+  background-color: #ecf0f1;
+  padding: 2rem;
+  border-radius: 15px;
+  margin-bottom: 3rem;
+  border-left: 5px solid #008170;
+}
+
+.mission-statement p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #2c3e50;
+  margin: 0;
+  font-weight: 500;
+  text-align: center;
+}
+
+.mission h3 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.mission-points {
+  display: grid;
+  gap: 2rem;
+}
+
+.mission-point {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+.mission-point:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.point-number {
+  background: linear-gradient(135deg, #008170, #004d7a);
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.point-content p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #5a6c7d;
+  margin: 0;
+}
+
+.vision {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, #004d7a 0%, #008170 100%);
+  color: white;
+}
+
+.vision h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.vision-content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.vision-content p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  opacity: 0.95;
+}
+
+.core-values {
+  padding: 4rem 0;
+  background-color: #f8f9fa;
+}
+
+.core-values h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.values-intro {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.values-intro p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #5a6c7d;
+  margin-bottom: 1rem;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.value-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border-top: 4px solid #008170;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.value-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.value-card p {
+  color: #5a6c7d;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 768px) {
+  .about-hero h1 {
+    font-size: 2rem;
+  }
+  
+  .about-hero p {
+    font-size: 1rem;
+  }
+  
+  .mission-point {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .point-number {
+    margin: 0 auto;
+  }
+  
+  .values-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .about-content, .mission, .vision, .core-values {
+    padding: 2rem 0;
+  }
+  
+  .highlight {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+  }
+}
