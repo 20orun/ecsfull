@@ -3,39 +3,31 @@
   "buildCommand": "npm run build",
   "outputDirectory": "build",
   "framework": "create-react-app",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/static/(.*)",
-      "headers": { 
-        "cache-control": "s-maxage=31536000,immutable"
-      },
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico"
-    },
-    {
-      "src": "/manifest.json",
-      "dest": "/manifest.json"
-    },
-    {
-      "src": "/robots.txt",
-      "dest": "/robots.txt"
-    },
-    {
-      "src": "/(.*\\.(png|jpg|jpeg|gif|svg|ico|css|js))",
-      "headers": { 
-        "cache-control": "s-maxage=31536000,immutable"
-      },
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/((?!static|favicon.ico|manifest.json|robots.txt|.*\\.(png|jpg|jpeg|gif|svg|ico|css|js)).*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=31536000,immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.(png|jpg|jpeg|gif|svg|ico|css|js))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=31536000,immutable"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
