@@ -139,6 +139,136 @@ const Services = () => {
                   affordable quality healthcare and sustainable wealth management.
                 </p>
               </div>
+              
+              <div className="digital-subsection">
+                <h3>Comprehensive Health Services Available</h3>
+                <div className="health-services-grid">
+                  <div className="service-card">
+                    <div className="service-number">1</div>
+                    <h4>Annual Medical Checkup</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">2</div>
+                    <h4>Doctor Appointments</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">3</div>
+                    <h4>Second Opinions</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">4</div>
+                    <h4>Ambulance Services</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">5</div>
+                    <h4>Surgery Planning</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">6</div>
+                    <h4>Medicines Delivery</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">7</div>
+                    <h4>Sending Reminders</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">8</div>
+                    <h4>Home Health Visits</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">9</div>
+                    <h4>Home Care Nurse</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">10</div>
+                    <h4>24 Hours Bedside Care</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">11</div>
+                    <h4>Speech & Hearing Aids</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">12</div>
+                    <h4>Eye Care</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">13</div>
+                    <h4>Dietitian Consultation</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">14</div>
+                    <h4>Physiotherapy Services</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">15</div>
+                    <h4>Diagnostics Services</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">16</div>
+                    <h4>Dental Consultation</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">17</div>
+                    <h4>Homeopathy Consultation</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">18</div>
+                    <h4>Ayurveda Consultation</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">19</div>
+                    <h4>Property Management Assistance</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">20</div>
+                    <h4>Transportation Assistance</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">21</div>
+                    <h4>Day Outings</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">22</div>
+                    <h4>Visa, Passport, Ticketing</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">23</div>
+                    <h4>Realtime Updates</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">24</div>
+                    <h4>Accompanied Care Manager</h4>
+                  </div>
+                  
+                  <div className="service-card">
+                    <div className="service-number">25</div>
+                    <h4>24X7 Contact Centre</h4>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
