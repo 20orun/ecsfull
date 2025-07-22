@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Team.css';
 
 const Team = () => {
+  const [imageLoading, setImageLoading] = useState({});
+
+  const handleImageLoad = (index) => {
+    setImageLoading(prev => ({ ...prev, [index]: false }));
+  };
+
+  const handleImageStart = (index) => {
+    setImageLoading(prev => ({ ...prev, [index]: true }));
+  };
   const teamMembers = [
     {
       name: 'Jyotiprakash Panda',
@@ -65,11 +74,20 @@ const Team = () => {
               <div key={index} className="team-member">
                 <div className="member-header">
                   <div className="member-image">
+                    {imageLoading[index] && (
+                      <div className="image-loading">
+                        <div className="loading-spinner"></div>
+                      </div>
+                    )}
                     <img 
                       src={member.image} 
                       alt={`${member.name} - ${member.position}`}
                       className="member-photo"
+                      loading="lazy"
+                      onLoadStart={() => handleImageStart(index)}
+                      onLoad={() => handleImageLoad(index)}
                       onError={(e) => {
+                        setImageLoading(prev => ({ ...prev, [index]: false }));
                         e.target.style.display = 'none';
                         e.target.nextSibling.style.display = 'flex';
                       }}
