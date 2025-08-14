@@ -11,6 +11,28 @@
   ],
   "headers": [
     {
+      "source": "/static/css/(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=31536000,immutable"
+        }
+      ]
+    },
+    {
+      "source": "/static/js/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=31536000,immutable"
+        }
+      ]
+    },
+    {
       "source": "/static/(.*)",
       "headers": [
         {
