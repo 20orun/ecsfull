@@ -82,7 +82,7 @@ const Contact = () => {
                           type="text"
                           id="firstName"
                           name="firstName"
-                          placeholder="Enter your first name here"
+                          placeholder="Your first name"
                           required
                         />
                         <ValidationError 
@@ -97,7 +97,7 @@ const Contact = () => {
                           type="text"
                           id="lastName"
                           name="lastName"
-                          placeholder="Enter your last name here"
+                          placeholder="Your last name"
                           required
                         />
                         <ValidationError 
@@ -114,7 +114,7 @@ const Contact = () => {
                         type="email"
                         id="email"
                         name="email"
-                        placeholder="Example: user@website.com"
+                        placeholder="Your Email"
                         required
                       />
                       <ValidationError 
@@ -154,3 +154,4 @@ const Contact = () => {
 };
 
 export default Contact;
+
