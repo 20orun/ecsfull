@@ -9,19 +9,19 @@ const Contact = () => {
   const heroStyle = {
     background: 'linear-gradient(135deg, #004d7a 0%, #008170 100%)',
     color: 'white',
-    padding: '6rem 0 4rem',
+    padding: window.innerWidth <= 768 ? '2.5rem 0 1.5rem' : '6rem 0 4rem',
     textAlign: 'center'
   };
 
   const contentStyle = {
-    padding: '4rem 0',
+    padding: window.innerWidth <= 768 ? '2rem 0' : '4rem 0',
     background: '#f8f9fa'
   };
 
   const containerStyle = {
     maxWidth: '1200px',
     margin: '0 auto',
-    padding: '0 1rem'
+    padding: window.innerWidth <= 480 ? '0 0.8rem' : '0 1rem'
   };
 
   return (
@@ -82,7 +82,7 @@ const Contact = () => {
                           type="text"
                           id="firstName"
                           name="firstName"
-                          placeholder="Your first name"
+                          placeholder="Enter your first name here"
                           required
                         />
                         <ValidationError 
@@ -97,7 +97,7 @@ const Contact = () => {
                           type="text"
                           id="lastName"
                           name="lastName"
-                          placeholder="Your last name"
+                          placeholder="Enter your last name here"
                           required
                         />
                         <ValidationError 
@@ -114,7 +114,7 @@ const Contact = () => {
                         type="email"
                         id="email"
                         name="email"
-                        placeholder="Your Email"
+                        placeholder="Example: user@website.com"
                         required
                       />
                       <ValidationError 
@@ -129,7 +129,7 @@ const Contact = () => {
                       <textarea
                         id="comments"
                         name="comments"
-                        rows="5"
+                        rows="4"
                         required
                       ></textarea>
                       <ValidationError 
@@ -154,4 +154,3 @@ const Contact = () => {
 };
 
 export default Contact;
-
