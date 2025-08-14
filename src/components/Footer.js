@@ -44,7 +44,6 @@ const Footer = () => {
             <div className="contact-info">
               <p>Email: info@excelcare.us</p>
               <p>Website: www.excelcare.us</p>
-              <p>Location: Healthcare Solutions Provider</p>
             </div>
           </div>
         </div>
@@ -61,3 +60,4 @@ const Footer = () => {
 };
 
 export default Footer;
+
