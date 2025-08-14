@@ -5,17 +5,36 @@ import './Contact.css';
 const Contact = () => {
   const [state, handleSubmit] = useForm("mvgqyklv");
 
+  // Inline styles as fallback for critical styles
+  const heroStyle = {
+    background: 'linear-gradient(135deg, #004d7a 0%, #008170 100%)',
+    color: 'white',
+    padding: '6rem 0 4rem',
+    textAlign: 'center'
+  };
+
+  const contentStyle = {
+    padding: '4rem 0',
+    background: '#f8f9fa'
+  };
+
+  const containerStyle = {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '0 1rem'
+  };
+
   return (
-    <div className="contact-page">
-      <div className="contact-hero">
-        <div className="container">
+    <div className="contact-page" style={{minHeight: '100vh'}}>
+      <div className="contact-hero" style={heroStyle}>
+        <div className="container" style={containerStyle}>
           <h1>Contact</h1>
           <h2>Let's get in touch</h2>
         </div>
       </div>
 
-      <div className="contact-content">
-        <div className="container">
+      <div className="contact-content" style={contentStyle}>
+        <div className="container" style={containerStyle}>
           <div className="contact-grid">
             <div className="locations-section">
               <h2>Locations</h2>
