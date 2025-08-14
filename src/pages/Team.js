@@ -15,7 +15,7 @@ const Team = () => {
     {
       name: 'Jyotiprakash Panda',
       position: 'Group CEO',
-      image: 'https://excelcare.us/wp-content/uploads/2025/04/Jyoti-Prakash.png',
+      image: 'https://excelcare.vercel.app/Jyoti-Prakash.png',
       bio: `Mr. Panda has over 15 years of experience in Banking, Finance, Investments,
              Asset Management, Corporate Finance, Private Equity, Equity Research, Real Estate,
              Corporate Strategy and Business Development.`,
@@ -34,7 +34,7 @@ const Team = () => {
     {
       name: 'Dr. Bishnu Charan Pattnaik',
       position: 'Managing Director',
-      image: 'https://media.licdn.com/dms/image/v2/C5103AQH6ixl6tZjhoA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1533888635805?e=2147483647&v=beta&t=YblwD-UqMU6BxhtidxNrSLEmlTBjF1HLzPomsEXtxdQ',
+      image: 'https://excelcare.vercel.app/Bishnu-Charan-Pattnaik.jpg',
       bio: `A dedicated Consultant Physician with 24+ years of experience in Internal Medicine 
             Dr.Bishnu has a keen focus on preventive health and the early detection of diseases.`,
       details: [
@@ -150,4 +150,5 @@ const Team = () => {
 };
 
 export default Team;
+
 
