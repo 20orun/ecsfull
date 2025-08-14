@@ -1,7 +1,32 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const handleKnowMore = (serviceId) => {
+    navigate('/services');
+    // Small delay to ensure navigation is complete before scrolling
+    setTimeout(() => {
+      const element = document.getElementById(serviceId);
+      if (element) {
+        // Get navbar height to calculate offset
+        const navbar = document.querySelector('.navigation');
+        const navbarHeight = navbar ? navbar.offsetHeight : 80; // fallback to 80px
+        
+        // Calculate position with offset for navbar
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - navbarHeight - 20; // 20px extra padding
+        
+        // Smooth scroll to the calculated position
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  };
   return (
     <div className="home">
       <section className="hero">
@@ -37,23 +62,80 @@ const Home = () => {
         <div className="container">
           <h3>Our Key Service Areas</h3>
           <div className="areas-grid">
-            <div className="area-card">
+            <div className="area-card pharmaceutics">
+              <div className="card-icon">
+                <img src="/capsules.png" alt="Pharmaceutics" className="icon-graphic" />
+              </div>
               <h4>Pharmaceutics</h4>
+              <div className="card-tagline">Excellence in Medicine</div>
               <p>Cost-effective pharmaceutical distribution with expertise in logistics and supply chain management.</p>
+              <button 
+                className="know-more-btn"
+                onClick={() => handleKnowMore('pharmaceutics')}
+                aria-label="Know more about Pharmaceutics"
+              >
+                <span className="btn-text">Know More</span>
+                <span className="btn-icon">→</span>
+              </button>
+              <div className="card-decoration"></div>
             </div>
-            <div className="area-card">
+            <div className="area-card diagnostics">
+              <div className="card-icon">
+                <img src="/microscope.png" alt="Diagnostics Services" className="icon-graphic" />
+              </div>
               <h4>Diagnostics Services</h4>
+              <div className="card-tagline">Precision Healthcare</div>
               <p>Advanced medical diagnostic services including laboratory diagnostics, imaging, and cardiovascular diagnostics.</p>
+              <button 
+                className="know-more-btn"
+                onClick={() => handleKnowMore('diagnostics')}
+                aria-label="Know more about Diagnostics Services"
+              >
+                <span className="btn-text">Know More</span>
+                <span className="btn-icon">→</span>
+              </button>
+              <div className="card-decoration"></div>
             </div>
-            <div className="area-card">
+            <div className="area-card digital-health">
+              <div className="card-icon">
+                <img src="/emergency-call.png" alt="Digital Health" className="icon-graphic" />
+              </div>
               <h4>Digital Health</h4>
+              <div className="card-tagline">Innovation in Care</div>
               <p>Cutting-edge digital health solutions and our Health & Wealth mobile application.</p>
+              <button 
+                className="know-more-btn"
+                onClick={() => handleKnowMore('digital-health')}
+                aria-label="Know more about Digital Health"
+              >
+                <span className="btn-text">Know More</span>
+                <span className="btn-icon">→</span>
+              </button>
+              <div className="card-decoration"></div>
             </div>
-            <div className="area-card">
+            <div className="area-card logistics">
+              <div className="card-icon">
+                <img src="/delivery.png" alt="Logistics Management" className="icon-graphic" />
+              </div>
               <h4>Logistics Management</h4>
+              <div className="card-tagline">Smart Distribution</div>
               <p>Efficient logistics management of medical supplies and commodities with AI-driven solutions.</p>
+              <button 
+                className="know-more-btn"
+                onClick={() => handleKnowMore('logistics')}
+                aria-label="Know more about Logistics Management"
+              >
+                <span className="btn-text">Know More</span>
+                <span className="btn-icon">→</span>
+              </button>
+              <div className="card-decoration"></div>
             </div>
           </div>
+        </div>
+        <div className="section-background-graphics">
+          <div className="bg-graphic bg-graphic-1"></div>
+          <div className="bg-graphic bg-graphic-2"></div>
+          <div className="bg-graphic bg-graphic-3"></div>
         </div>
       </section>
 

@@ -13,7 +13,7 @@ const Services = () => {
 
       <section className="services-content">
         <div className="container">
-          <div className="service-section">
+          <div className="service-section" id="pharmaceutics">
             <div className="service-header">
               <span className="service-number">1</span>
               <h2>Pharmaceutics</h2>
@@ -51,7 +51,7 @@ const Services = () => {
             </div>
           </div>
 
-          <div className="service-section">
+          <div className="service-section" id="diagnostics">
             <div className="service-header">
               <span className="service-number">2</span>
               <h2>Diagnostics Services</h2>
@@ -105,7 +105,7 @@ const Services = () => {
             </div>
           </div>
 
-          <div className="service-section">
+          <div className="service-section" id="digital-health">
             <div className="service-header">
               <span className="service-number">3</span>
               <h2>Digital Health and Hospitality</h2>
@@ -272,7 +272,7 @@ const Services = () => {
             </div>
           </div>
 
-          <div className="service-section">
+          <div className="service-section" id="logistics">
             <div className="service-header">
               <span className="service-number">4</span>
               <h2>Commodities and Medical Supplies Logistics Management</h2>
@@ -281,7 +281,6 @@ const Services = () => {
               Efficient logistics management of medical supplies and commodities is crucial for ensuring the
               availability of essential healthcare resources, minimizing shortages, and maintaining quality standards. This involves the planning, procurement, storage,
               distribution, and monitoring of medical goods, including pharmaceuticals, medical equipment and consumables.
-
               This being a critical function that ensures the smooth operation of healthcare
               systems, technology, data-driven strategies, supply chain efficiency can be
               significantly improved to enhance patient care and resource utilization.
@@ -309,4 +308,3 @@ const Services = () => {
 };
 
 export default Services;
-
