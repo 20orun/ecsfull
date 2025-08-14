@@ -214,57 +214,238 @@
   display: block;
 }
 
-/* Mobile Responsiveness */
+/* Mobile Responsiveness - Enhanced */
 @media (max-width: 768px) {
-  .contact-hero {
-    padding: 4rem 0 3rem;
+  .contact-page .container {
+    padding: 0 1rem !important;
+  }
+
+  .contact-page .contact-hero {
+    padding: 3rem 0 2rem !important;
   }
   
-  .contact-hero h1 {
-    font-size: 2.5rem;
+  .contact-page .contact-hero h1 {
+    font-size: 2.2rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.8rem !important;
   }
   
-  .contact-hero h2 {
-    font-size: 1.4rem;
+  .contact-page .contact-hero h2 {
+    font-size: 1.3rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .contact-page .contact-content {
+    padding: 2.5rem 0 !important;
   }
   
-  .contact-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+  .contact-page .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .contact-page .locations-section h2,
+  .contact-page .contact-form-section h2 {
+    font-size: 2rem !important;
+    margin-bottom: 1.5rem !important;
   }
   
-  .form-row {
-    grid-template-columns: 1fr;
+  .contact-page .form-row {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
   }
   
-  .contact-form-section {
-    padding: 1.5rem;
+  .contact-page .contact-form-section {
+    padding: 1.5rem !important;
+    margin-top: 0 !important;
   }
   
-  .location-card {
-    padding: 1.5rem;
+  .contact-page .location-card {
+    padding: 1.5rem !important;
+  }
+
+  .contact-page .contact-form {
+    gap: 1.2rem !important;
+  }
+
+  .contact-page .form-group input,
+  .contact-page .form-group textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    padding: 0.8rem !important;
+  }
+
+  .contact-page .submit-btn {
+    width: 100% !important;
+    padding: 1rem !important;
+    font-size: 1rem !important;
+    align-self: stretch !important;
   }
 }
 
 @media (max-width: 480px) {
-  .contact-hero h1 {
-    font-size: 2rem;
+  .contact-page .container {
+    padding: 0 0.8rem !important;
+  }
+
+  .contact-page .contact-hero {
+    padding: 2.5rem 0 1.5rem !important;
+  }
+
+  .contact-page .contact-hero h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.1 !important;
+    margin-bottom: 0.6rem !important;
   }
   
-  .contact-hero h2 {
-    font-size: 1.2rem;
+  .contact-page .contact-hero h2 {
+    font-size: 1.1rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .contact-page .contact-content {
+    padding: 2rem 0 !important;
   }
   
-  .locations-section h2,
-  .contact-form-section h2 {
-    font-size: 2rem;
+  .contact-page .locations-section h2,
+  .contact-page .contact-form-section h2 {
+    font-size: 1.6rem !important;
+    margin-bottom: 1.2rem !important;
+    text-align: center !important;
   }
   
-  .contact-form-section {
-    padding: 1rem;
+  .contact-page .contact-form-section {
+    padding: 1rem !important;
   }
   
-  .location-card {
-    padding: 1rem;
+  .contact-page .location-card {
+    padding: 1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .contact-page .location-card h3 {
+    font-size: 1.3rem !important;
+    text-align: center !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .contact-page .location-details {
+    text-align: center !important;
+  }
+
+  .contact-page .location-details p {
+    font-size: 0.9rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .contact-page .contact-form-container h3 {
+    font-size: 1.4rem !important;
+    text-align: center !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .contact-page .contact-form-container > p {
+    text-align: center !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .contact-page .form-subtitle {
+    font-size: 1rem !important;
+    text-align: center !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .contact-page .form-group label {
+    font-size: 0.85rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .contact-page .form-group input,
+  .contact-page .form-group textarea {
+    font-size: 16px !important;
+    padding: 0.7rem !important;
+    border-radius: 6px !important;
+  }
+
+  .contact-page .form-group textarea {
+    min-height: 80px !important;
+  }
+
+  .contact-page .submit-btn {
+    width: 100% !important;
+    padding: 0.9rem !important;
+    font-size: 1rem !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .contact-page .success-message {
+    padding: 1rem !important;
+    margin-top: 1rem !important;
+  }
+
+  .contact-page .success-message p {
+    font-size: 1rem !important;
+  }
+
+  .contact-page .contact-grid {
+    gap: 1.5rem !important;
+  }
+}
+
+/* Extra small screens - phones in portrait */
+@media (max-width: 375px) {
+  .contact-page .container {
+    padding: 0 0.6rem !important;
+  }
+
+  .contact-page .contact-hero h1 {
+    font-size: 1.6rem !important;
+  }
+
+  .contact-page .contact-hero h2 {
+    font-size: 1rem !important;
+  }
+
+  .contact-page .contact-form-section,
+  .contact-page .location-card {
+    padding: 0.8rem !important;
+  }
+
+  .contact-page .form-group input,
+  .contact-page .form-group textarea {
+    padding: 0.6rem !important;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  .contact-page .submit-btn {
+    min-height: 48px !important; /* iOS touch target size */
+    padding: 1rem 1.5rem !important;
+  }
+
+  .contact-page .form-group input,
+  .contact-page .form-group textarea {
+    min-height: 44px !important; /* Touch-friendly input height */
+    padding: 0.8rem !important;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .contact-page .contact-hero {
+    padding: 2rem 0 1.5rem !important;
+  }
+
+  .contact-page .contact-hero h1 {
+    font-size: 2rem !important;
+  }
+
+  .contact-page .contact-hero h2 {
+    font-size: 1.2rem !important;
+  }
+
+  .contact-page .contact-content {
+    padding: 2rem 0 !important;
   }
 }
