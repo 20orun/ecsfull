@@ -281,8 +281,7 @@ const Services = () => {
               Efficient logistics management of medical supplies and commodities is crucial for ensuring the
               availability of essential healthcare resources, minimizing shortages, and maintaining quality standards. This involves the planning, procurement, storage,
               distribution, and monitoring of medical goods, including pharmaceuticals, medical equipment and consumables.
-            </p>
-            <p>
+
               This being a critical function that ensures the smooth operation of healthcare
               systems, technology, data-driven strategies, supply chain efficiency can be
               significantly improved to enhance patient care and resource utilization.
@@ -310,3 +309,4 @@ const Services = () => {
 };
 
 export default Services;
+
