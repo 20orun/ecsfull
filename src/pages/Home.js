@@ -26,7 +26,7 @@ const Home = () => {
               Healthcare and Logistics Management to transform challenges into opportunities.
             </p>
             <p>
-              Our strategic partnership with our partners enhances our ability to deliver 
+              As a sister concern of Care Group International, our strategic partnership with our partners enhances our ability to deliver 
               our services in a time bound manner.
             </p>
           </div>
@@ -69,3 +69,4 @@ const Home = () => {
 };
 
 export default Home;
+
