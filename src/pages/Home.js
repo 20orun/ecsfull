@@ -141,7 +141,7 @@ const Home = () => {
 
       <section className="cta">
         <div className="container">
-          <h3>Ready to Transform Your Healthcare Solutions?</h3>
+          <h3>Ready to Transform Your Healthcare Services?</h3>
           <p>Partner with us to experience premium healthcare services and innovative solutions.</p>
           <a href="/collaborators" className="btn-primary">View Our Collaborators</a>
         </div>

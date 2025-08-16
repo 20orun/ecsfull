@@ -269,3 +269,205 @@
     font-size: 0.9rem;
   }
 }
+
+/* Diagnostic Partnerships Section */
+.diagnostic-partnerships {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.diagnostic-partnerships::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(0, 77, 122, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 129, 112, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  position: relative;
+}
+
+.section-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #004d7a, #008170);
+  border-radius: 2px;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #5a6c7d;
+}
+
+.partnerships-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.partnership-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(0, 77, 122, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.partnership-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #004d7a, #008170);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.partnership-card.hovered::before {
+  transform: scaleX(1);
+}
+
+.partnership-card.hovered {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 77, 122, 0.15);
+  border-color: rgba(0, 129, 112, 0.2);
+}
+
+.partnership-icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #004d7a, #008170);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.partnership-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.partnership-card.hovered .partnership-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.partnership-card.hovered .partnership-icon::before {
+  left: 100%;
+}
+
+.partnership-content {
+  flex: 1;
+}
+
+.partnership-content h4 {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+.partnership-card.hovered .partnership-content h4 {
+  color: #004d7a;
+}
+
+.partnership-decoration {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, rgba(0, 77, 122, 0.05), rgba(0, 129, 112, 0.05));
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.partnership-card.hovered .partnership-decoration {
+  transform: scale(1.2);
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .diagnostic-partnerships {
+    padding: 2rem 0;
+  }
+  
+  .section-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .partnerships-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .partnership-card {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+  
+  .partnership-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+  }
+  
+  .partnership-content h4 {
+    font-size: 1rem;
+  }
+}

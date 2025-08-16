@@ -1,6 +1,57 @@
 import React, { useState } from 'react';
 import './Collaborators.css';
 
+const diagnosticPartnerships = [
+  {
+    title: 'Diagnostic and Imaging Partnership',
+    company: 'WIWO Speciality Hospital',
+    logo: '/wiwo.png',
+    details: 'Comprehensive diagnostic and imaging partnership with WIWO Speciality Hospital for advanced healthcare services.',
+  },
+  {
+    title: 'Diagnostic Partnership',
+    company: 'Baho Healthcare',
+    logo: '/baho.jpg',
+    details: 'Strategic diagnostic partnership with Baho Healthcare to enhance medical diagnostic capabilities.',
+  },
+  {
+    title: 'Diagnostic Partnership',
+    company: 'Legacy Healthcare',
+    logo: '/legacy.png',
+    details: 'Collaborative diagnostic services partnership with Legacy Healthcare for quality patient care.',
+  },
+  {
+    title: 'Diagnostic Partnership',
+    company: 'La Croix Healthcare',
+    logo: '/la-croix.png',
+    details: 'Advanced diagnostic partnership with La Croix Healthcare for comprehensive medical services.',
+  },
+  {
+    title: 'Foundation Partnership',
+    company: 'Ndengera Foundation',
+    logo: '/ndengera.png',
+    details: 'Healthcare foundation partnership with Ndengera Foundation to expand community health services.',
+  },
+  {
+    title: 'Clinic Partnership',
+    company: 'UBI Caritas Clinic',
+    logo: '/ubi-caritas.png',
+    details: 'Diagnostic services partnership with UBI Caritas Clinic for enhanced patient care delivery.',
+  },
+  {
+    title: 'Clinic Partnership',
+    company: 'Carrefour Poly Clinic',
+    logo: '/carrefour.png',
+    details: 'Comprehensive clinic partnership with Carrefour Poly Clinic for diagnostic excellence.',
+  },
+  {
+    title: 'Clinic Partnership',
+    company: 'Maxcure Polyclinic',
+    logo: '/maxcure.png',
+    details: 'Strategic diagnostic partnership with Maxcure Polyclinic for advanced medical services.',
+  }
+];
+
 const partnerships = [
   {
     title: 'CT Scan',
@@ -126,24 +177,41 @@ const Collaborators = () => {
     <div className="collaborators">
       <section className="collaborators-hero">
         <div className="container">
-          <h1>Our Collaborators</h1>
-          <p>Trusted partnerships for quality healthcare solutions</p>
+          <h1>Our Collaborations and Strategic Partnerships</h1>
         </div>
       </section>
 
       <section className="collaborators-content">
         <div className="container">
-          <div className="intro-text">
-            <p>
-              Our strategic partnerships with leading healthcare companies worldwide enable us to deliver 
-              cutting-edge solutions and maintain the highest standards of quality in our services. These 
-              collaborations strengthen our ability to provide comprehensive healthcare solutions across 
-              various specialties.
-            </p>
+          <div className="section-header">
+            <h2>Collaborations</h2>
+            <p>Our collaboration with leading healthcare companies worldwide enable us to deliver 
+              cutting-edge solutions and maintain the highest standards of quality in our services, strengthening our ability to provide comprehensive healthcare solutions across 
+              various specialties.</p>
           </div>
           
           <div className="collaborators-grid">
             {partnerships.map((item, index) => (
+              <Card 
+                key={index} 
+                logo={item.logo} 
+                details={item.details} 
+                company={item.company}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="diagnostic-partnerships">
+        <div className="container">
+          <div className="section-header">
+            <h2>Strategic Partnerships</h2>
+            <p>Building strong alliances with healthcare institutions worldwide to deliver exceptional medical services and expand our global healthcare impact</p>
+          </div>
+          
+          <div className="collaborators-grid">
+            {diagnosticPartnerships.map((item, index) => (
               <Card 
                 key={index} 
                 logo={item.logo} 
