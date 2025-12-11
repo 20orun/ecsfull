@@ -65,6 +65,26 @@
   outline: none;
 }
 
+.nav-signout {
+  background: none;
+  cursor: pointer;
+  color: #e74c3c;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.nav-signout:hover {
+  color: #c0392b;
+  background: rgba(231, 76, 60, 0.1);
+}
+
+.nav-user-name {
+  color: #008170;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
 .nav-toggle {
   display: none;
   flex-direction: column;
