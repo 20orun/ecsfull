@@ -329,7 +329,7 @@ const InvoicePdf = ({ invoiceData }) => {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerContent}>
-            <Image style={styles.logo} src="/ecs-invoice.png" />
+            <Image style={styles.logo} src="https://excelcare.vercel.app/ecs-invoice.png" />
             <View style={styles.firmInfo}>
               <Text style={styles.firmName}>{FIRM_CONFIG.name}</Text>
               <Text style={styles.firmAddress}>{FIRM_CONFIG.address}</Text>
@@ -538,3 +538,4 @@ const InvoicePdf = ({ invoiceData }) => {
 };
 
 export default InvoicePdf;
+
