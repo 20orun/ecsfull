@@ -3,7 +3,7 @@
 
 export const FIRM_CONFIG = {
   name: 'Excel Care Solutions',
-  address: 'Cabin No X, Brindaban Business Centre, Manimala Road, Cochin, Kerala, India - 682024',
+  address: 'Door No.43/1851/A5, Peringatt Building, Pallissery Road, Palarivattam, Kochi, Kerala - 682025',
   gstin: '32AAMFE1322R1ZB', // Replace with actual GSTIN
   state: 'Kerala', // Firm's state for CGST/SGST vs IGST determination
   stateCode: '32', // Kerala state code
@@ -66,3 +66,4 @@ export const INDIAN_STATES = [
 
 // Common GST Rates
 export const GST_RATES = [0, 5, 12, 18, 28];
+
