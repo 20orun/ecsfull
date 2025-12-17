@@ -168,10 +168,7 @@
 
 /* Invoice Content Layout */
 .invoice-content {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 30px;
-  max-width: 1500px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
