@@ -115,6 +115,20 @@ const Navigation = () => {
               >
                 Invoice History
               </Link>
+              <Link 
+                to="/purchase-order" 
+                className={`nav-link ${isActive('/purchase-order')}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                PO Generate
+              </Link>
+              <Link 
+                to="/purchase-order-history" 
+                className={`nav-link ${isActive('/purchase-order-history')}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                PO History
+              </Link>
               <button 
                 className="nav-link nav-signout"
                 onClick={handleSignOut}

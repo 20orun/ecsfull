@@ -1,4 +1,4 @@
-.invoice-form-container {
+.po-form-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -23,7 +23,7 @@
   opacity: 0.9;
 }
 
-.invoice-form {
+.po-form {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -99,32 +99,31 @@
   border-color: #e74c3c;
 }
 
-.error-text {
-  color: #e74c3c;
-  font-size: 0.8rem;
-  margin-top: 2px;
+.form-group input.readonly-input {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
 }
 
-.tax-type-indicator {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding-top: 25px;
+.tax-indicator {
+  padding: 15px 25px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eee;
 }
 
 .tax-badge {
-  padding: 10px 20px;
+  display: inline-block;
+  padding: 8px 16px;
   border-radius: 20px;
+  font-size: 0.9rem;
   font-weight: 600;
-  font-size: 0.85rem;
 }
 
-.tax-badge.intra {
+.tax-badge.intra-state {
   background: #d4edda;
   color: #155724;
 }
 
-.tax-badge.inter {
+.tax-badge.inter-state {
   background: #fff3cd;
   color: #856404;
 }
@@ -139,7 +138,7 @@
 
 .items-header {
   display: grid;
-  grid-template-columns: 2fr 1fr 0.8fr 1fr 1fr 1fr 1.5fr;
+  grid-template-columns: 2fr 1fr 0.7fr 0.8fr 1fr 1fr 1fr 1.5fr;
   gap: 10px;
   padding: 12px 15px;
   background: #f8f9fa;
@@ -151,7 +150,7 @@
 
 .items-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 0.8fr 1fr 1fr 1fr 1.5fr;
+  grid-template-columns: 2fr 1fr 0.7fr 0.8fr 1fr 1fr 1fr 1.5fr;
   gap: 10px;
   padding: 12px 15px;
   border-bottom: 1px solid #eee;
@@ -200,219 +199,204 @@
 }
 
 .btn-add-bill {
-  background: #3498db;
+  padding: 6px 12px;
+  background: #27ae60;
   color: white;
   border: none;
-  padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.8rem;
-  font-weight: 500;
-  transition: background 0.3s ease;
-  white-space: nowrap;
+  font-weight: 600;
 }
 
 .btn-add-bill:hover {
-  background: #2980b9;
+  background: #219a52;
 }
 
 .btn-update {
-  background: #f39c12;
+  padding: 6px 12px;
+  background: #3498db;
   color: white;
   border: none;
-  padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.8rem;
-  font-weight: 500;
-  transition: background 0.3s ease;
+  font-weight: 600;
 }
 
 .btn-update:hover {
-  background: #d68910;
+  background: #2980b9;
 }
 
 .btn-remove-bill {
-  background: #e74c3c;
+  padding: 6px 12px;
+  background: #f39c12;
   color: white;
   border: none;
-  padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.8rem;
-  font-weight: 500;
-  transition: background 0.3s ease;
+  font-weight: 600;
 }
 
 .btn-remove-bill:hover {
-  background: #c0392b;
+  background: #d68910;
 }
 
-.btn-delete-row {
-  background: #95a5a6;
-  color: white;
-  border: none;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s ease;
-}
-
-.btn-delete-row:hover {
-  background: #7f8c8d;
-}
-
-.btn-remove {
+.btn-delete {
+  padding: 6px 10px;
   background: #e74c3c;
   color: white;
   border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s ease;
+  font-weight: bold;
+  line-height: 1;
 }
 
-.btn-remove:hover {
+.btn-delete:hover {
   background: #c0392b;
 }
 
 .btn-add-item {
-  background: #27ae60;
-  color: white;
-  border: none;
-  padding: 12px 24px;
+  padding: 12px 20px;
+  background: #ecf0f1;
+  color: #2c3e50;
+  border: 2px dashed #bdc3c7;
   border-radius: 8px;
+  cursor: pointer;
   font-size: 0.95rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  width: 100%;
 }
 
 .btn-add-item:hover {
-  background: #219a52;
+  background: #d5dbdb;
+  border-color: #95a5a6;
 }
 
-/* Totals Section */
-.totals-section {
+/* PO Summary */
+.po-summary {
   background: #f8f9fa;
 }
 
-.no-items-message {
-  text-align: center;
-  color: #7f8c8d;
-  padding: 30px;
-  font-style: italic;
-  background: #fff;
-  border-radius: 8px;
-  border: 2px dashed #ddd;
-}
-
-.billed-items-list {
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
+.summary-items {
   margin-bottom: 20px;
-  border: 1px solid #e0e0e0;
 }
 
-.billed-items-list h4 {
-  margin: 0 0 10px 0;
-  color: #27ae60;
+.summary-item {
+  padding: 10px 15px;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  border-left: 4px solid #27ae60;
+}
+
+.item-name {
   font-size: 0.95rem;
+  color: #2c3e50;
 }
 
-.billed-items-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.billed-items-list li {
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.billed-items-list li:last-child {
-  border-bottom: none;
-}
-
-.totals-grid {
-  max-width: 400px;
-  margin-left: auto;
+.totals-section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
 }
 
 .total-row {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 0.95rem;
+  border-bottom: 1px solid #eee;
 }
 
-.total-row.total-tax {
-  font-weight: 500;
+.total-row:last-child {
+  border-bottom: none;
 }
 
 .total-row.grand-total {
-  font-weight: 700;
   font-size: 1.2rem;
+  font-weight: 700;
   color: #2c3e50;
-  border-bottom: none;
+  border-top: 2px solid #2c3e50;
+  margin-top: 10px;
   padding-top: 15px;
-  border-top: 2px solid #3498db;
+}
+
+/* Terms Header */
+.terms-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #3498db;
+}
+
+.terms-header h3 {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.btn-toggle-terms {
+  padding: 6px 16px;
+  background: #ecf0f1;
+  color: #2c3e50;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btn-toggle-terms:hover {
+  background: #d5dbdb;
 }
 
 /* Form Actions */
 .form-actions {
   display: flex;
-  justify-content: flex-end;
   gap: 15px;
+  justify-content: flex-end;
   padding: 25px;
   background: #f8f9fa;
+  border-top: 1px solid #eee;
 }
 
 .btn-reset {
-  background: #6c757d;
-  color: white;
+  padding: 14px 30px;
+  background: #ecf0f1;
+  color: #2c3e50;
   border: none;
-  padding: 14px 28px;
   border-radius: 8px;
+  cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .btn-reset:hover {
-  background: #5a6268;
+  background: #d5dbdb;
 }
 
 .btn-submit {
-  background: #3498db;
+  padding: 14px 30px;
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
   color: white;
   border: none;
-  padding: 14px 28px;
   border-radius: 8px;
+  cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .btn-submit:hover:not(:disabled) {
-  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
 }
 
 .btn-submit:disabled {
@@ -420,21 +404,14 @@
   cursor: not-allowed;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .items-header,
-  .items-row {
-    grid-template-columns: 1.5fr 1fr 0.8fr 1fr 0.8fr 1fr 0.5fr;
-  }
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  .invoice-form-container {
+  .po-form-container {
     padding: 10px;
   }
 
   .firm-header {
-    padding: 20px 15px;
+    padding: 15px;
   }
 
   .firm-header h2 {
@@ -442,7 +419,18 @@
   }
 
   .form-section {
-    padding: 20px 15px;
+    padding: 15px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .items-header,
+  .items-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .items-header {
@@ -450,33 +438,35 @@
   }
 
   .items-row {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
     padding: 15px;
-    background: #fafafa;
-    margin-bottom: 10px;
-    border-radius: 8px;
   }
 
   .items-row > div {
+    display: flex;
+    flex-direction: column;
     width: 100%;
   }
 
-  .items-row input,
-  .items-row select {
-    width: 100%;
+  .items-row > div::before {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #555;
   }
 
-  .col-desc::before { content: 'Description: '; font-weight: 600; }
-  .col-hsn::before { content: 'HSN/SAC: '; font-weight: 600; }
-  .col-qty::before { content: 'Quantity: '; font-weight: 600; }
-  .col-rate::before { content: 'Unit Price: '; font-weight: 600; }
-  .col-gst::before { content: 'GST Rate: '; font-weight: 600; }
-  .col-taxable::before { content: 'Taxable Value: '; font-weight: 600; }
+  .col-desc::before { content: 'Description: '; }
+  .col-hsn::before { content: 'HSN/SAC: '; }
+  .col-qty::before { content: 'Quantity: '; }
+  .col-unit::before { content: 'Unit: '; }
+  .col-rate::before { content: 'Rate: '; }
+  .col-gst::before { content: 'GST Rate: '; }
+  .col-taxable::before { content: 'Taxable Value: '; }
 
-  .totals-grid {
-    max-width: 100%;
+  .col-action-wide {
+    min-width: auto;
+  }
+
+  .action-buttons {
+    justify-content: flex-start;
   }
 
   .form-actions {
@@ -487,30 +477,4 @@
   .btn-submit {
     width: 100%;
   }
-}
-
-/* Checkbox Group */
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 5px 0;
-}
-
-.checkbox-group input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: #3498db;
-}
-
-.checkbox-group label {
-  font-size: 0.95rem;
-  color: #555;
-  cursor: pointer;
-  user-select: none;
-}
-
-.checkbox-group label:hover {
-  color: #2c3e50;
 }

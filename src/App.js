@@ -13,6 +13,8 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Invoice from './pages/Invoice';
 import InvoiceHistory from './pages/InvoiceHistory';
+import PurchaseOrder from './pages/PurchaseOrder';
+import PurchaseOrderHistory from './pages/PurchaseOrderHistory';
 import './App.css';
 
 const App = () => {
@@ -33,6 +35,8 @@ const App = () => {
             <Route path="/signup7025637872" element={<Signup />} />
             <Route path="/invoice" element={<Invoice />} />
             <Route path="/invoice-history" element={<InvoiceHistory />} />
+            <Route path="/purchase-order" element={<PurchaseOrder />} />
+            <Route path="/purchase-order-history" element={<PurchaseOrderHistory />} />
           </Routes>
         </main>
         <Footer />

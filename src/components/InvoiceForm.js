@@ -396,7 +396,6 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
                     <input
                       type="text"
                       {...register(`items.${index}.description`, { required: true })}
-                      placeholder="Item description"
                       className={errors.items?.[index]?.description ? 'error' : ''}
                     />
                   </div>
@@ -404,15 +403,14 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
                     <input
                       type="text"
                       {...register(`items.${index}.hsnSacCode`, { required: true })}
-                      placeholder="HSN/SAC"
                       className={errors.items?.[index]?.hsnSacCode ? 'error' : ''}
                     />
                   </div>
                   <div className="col-qty">
                     <input
                       type="number"
-                      step="0.01"
-                      min="0.01"
+                      step="1"
+                      min="1"
                       {...register(`items.${index}.quantity`, { 
                         required: true,
                         valueAsNumber: true 

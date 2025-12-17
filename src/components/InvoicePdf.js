@@ -3,6 +3,15 @@ import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/
 import { FIRM_CONFIG } from '../config/firmConfig';
 import { numberToWords, formatCurrency, formatNumber, formatDate } from '../utils/invoiceUtils';
 
+// Get the logo URL - use absolute URL for production PDF generation
+const getLogoUrl = () => {
+  // In production, use the full URL; in development, use relative path
+  if (typeof window !== 'undefined' && window.location.origin) {
+    return `${window.location.origin}/ecs-invoice.png`;
+  }
+  return '/ecs-invoice.png';
+};
+
 // Register Roboto font from Google Fonts which supports Rupee symbol
 Font.register({
   family: 'Roboto',
@@ -329,7 +338,7 @@ const InvoicePdf = ({ invoiceData }) => {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerContent}>
-            <Image style={styles.logo} src="https://excelcare.vercel.app/ecs-invoice.png" />
+            <Image style={styles.logo} src={getLogoUrl()} />
             <View style={styles.firmInfo}>
               <Text style={styles.firmName}>{FIRM_CONFIG.name}</Text>
               <Text style={styles.firmAddress}>{FIRM_CONFIG.address}</Text>
@@ -538,4 +547,3 @@ const InvoicePdf = ({ invoiceData }) => {
 };
 
 export default InvoicePdf;
-
