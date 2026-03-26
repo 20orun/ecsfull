@@ -1,7 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 import { FIRM_CONFIG } from '../config/firmConfig';
-import { numberToWords, numberToWordsUsd, formatCurrency, formatNumber, formatNumberUsd, formatDate } from '../utils/invoiceUtils';
+import { numberToWords, numberToWordsUsd, formatNumber, formatNumberUsd, formatDate } from '../utils/invoiceUtils';
 
 // Get the logo URL - use absolute URL for production PDF generation
 const getLogoUrl = () => {

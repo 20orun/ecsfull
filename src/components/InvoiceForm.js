@@ -223,7 +223,7 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
     };
 
     onSubmit(invoiceData);
-  }, [onSubmit, totals, billedItems]);
+  }, [onSubmit, totals, billedItems, isUsdMode, sameAsShipping, usdRate]);
 
   const handleReset = useCallback(() => {
     setBilledItems([]);

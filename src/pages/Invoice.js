@@ -15,7 +15,7 @@ const Invoice = () => {
   const [loading, setLoading] = useState(false);
   const [savedInvoice, setSavedInvoice] = useState(null);
   const [message, setMessage] = useState({ type: '', text: '' });
-  const [recentInvoices, setRecentInvoices] = useState([]);
+  const [, setRecentInvoices] = useState([]);
   const [nextInvoiceNumber, setNextInvoiceNumber] = useState(null);
   const [viewingInvoice, setViewingInvoice] = useState(null);
 
@@ -180,6 +180,7 @@ const Invoice = () => {
   };
 
   // View invoice from history
+  // eslint-disable-next-line no-unused-vars
   const handleViewHistoryInvoice = async (invoice) => {
     try {
       // Fetch full invoice data including items
