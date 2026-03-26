@@ -1,7 +1,7 @@
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { FIRM_CONFIG } from '../config/firmConfig';
-import { formatDate, formatNumber, numberToWords } from '../utils/invoiceUtils';
+import { formatDate, formatNumber, formatNumberUsd, numberToWords, numberToWordsUsd } from '../utils/invoiceUtils';
 import InvoicePdf from './InvoicePdf';
 import './InvoicePreview.css';
 
@@ -29,6 +29,10 @@ const InvoicePreview = ({ invoiceData, onClose }) => {
   const totalTaxAmount = invoiceData.totalTaxAmount ?? (totalCgst + totalSgst + totalIgst);
 
   const isIntraState = placeOfSupply === FIRM_CONFIG.state;
+  const isUsdMode = invoiceData.isUsdMode || false;
+  const currencySymbol = isUsdMode ? '$' : '₹';
+  const fmtNumber = isUsdMode ? formatNumberUsd : formatNumber;
+  const fmtWords = isUsdMode ? numberToWordsUsd : numberToWords;
 
   return (
     <div className="invoice-preview-overlay">
@@ -52,7 +56,7 @@ const InvoicePreview = ({ invoiceData, onClose }) => {
               </div>
             </div>
             <div className="preview-invoice-title">
-              <h2>TAX INVOICE</h2>
+              <h2>{isUsdMode ? 'INVOICE' : 'TAX INVOICE'}</h2>
             </div>
           </div>
 
@@ -66,9 +70,12 @@ const InvoicePreview = ({ invoiceData, onClose }) => {
             <div className="preview-details-box">
               <h3>Place of Supply</h3>
               <p>{placeOfSupply}</p>
-              <p className="tax-type">
-                {isIntraState ? 'Intra-State (CGST + SGST)' : 'Inter-State (IGST)'}
-              </p>
+              {!isUsdMode && (
+                <p className="tax-type">
+                  {isIntraState ? 'Intra-State (CGST + SGST)' : 'Inter-State (IGST)'}
+                </p>
+              )}
+              {isUsdMode && <p className="tax-type">Currency: USD</p>}
             </div>
           </div>
 
@@ -95,38 +102,51 @@ const InvoicePreview = ({ invoiceData, onClose }) => {
           <div className="preview-table-container">
             <table className="preview-items-table">
               <thead>
-                <tr className="table-header-main">
-                  <th rowSpan="2">Sr.</th>
-                  <th rowSpan="2">Description</th>
-                  <th rowSpan="2">HSN/SAC</th>
-                  <th rowSpan="2">Qty</th>
-                  <th rowSpan="2">Rate</th>
-                  <th rowSpan="2">Taxable Amt</th>
-                  {isIntraState ? (
-                    <>
-                      <th colSpan="2">CGST</th>
-                      <th colSpan="2">SGST</th>
-                    </>
-                  ) : (
-                    <th colSpan="2">IGST</th>
-                  )}
-                  <th rowSpan="2">Total</th>
-                </tr>
-                <tr className="table-header-sub">
-                  {isIntraState ? (
-                    <>
-                      <th>%</th>
-                      <th>Amt</th>
-                      <th>%</th>
-                      <th>Amt</th>
-                    </>
-                  ) : (
-                    <>
-                      <th>%</th>
-                      <th>Amt</th>
-                    </>
-                  )}
-                </tr>
+                {isUsdMode ? (
+                  <tr className="table-header-main">
+                    <th>Sr.</th>
+                    <th>Description</th>
+                    <th>HSN/SAC</th>
+                    <th>Qty</th>
+                    <th>Rate ($)</th>
+                    <th>Amount ($)</th>
+                  </tr>
+                ) : (
+                  <>
+                    <tr className="table-header-main">
+                      <th rowSpan="2">Sr.</th>
+                      <th rowSpan="2">Description</th>
+                      <th rowSpan="2">HSN/SAC</th>
+                      <th rowSpan="2">Qty</th>
+                      <th rowSpan="2">Rate</th>
+                      <th rowSpan="2">Taxable Amt</th>
+                      {isIntraState ? (
+                        <>
+                          <th colSpan="2">CGST</th>
+                          <th colSpan="2">SGST</th>
+                        </>
+                      ) : (
+                        <th colSpan="2">IGST</th>
+                      )}
+                      <th rowSpan="2">Total</th>
+                    </tr>
+                    <tr className="table-header-sub">
+                      {isIntraState ? (
+                        <>
+                          <th>%</th>
+                          <th>Amt</th>
+                          <th>%</th>
+                          <th>Amt</th>
+                        </>
+                      ) : (
+                        <>
+                          <th>%</th>
+                          <th>Amt</th>
+                        </>
+                      )}
+                    </tr>
+                  </>
+                )}
               </thead>
               <tbody>
                 {items.map((item, index) => (
@@ -136,21 +156,27 @@ const InvoicePreview = ({ invoiceData, onClose }) => {
                     <td className="text-center">{item.hsnSacCode}</td>
                     <td className="text-center">{item.quantity}</td>
                     <td className="text-right">{item.unitPrice.toFixed(2)}</td>
-                    <td className="text-right">{item.taxableValue.toFixed(2)}</td>
-                    {isIntraState ? (
-                      <>
-                        <td className="text-right">{item.cgstRate.toFixed(2)}</td>
-                        <td className="text-right">{item.cgstAmount.toFixed(2)}</td>
-                        <td className="text-right">{item.sgstRate.toFixed(2)}</td>
-                        <td className="text-right">{item.sgstAmount.toFixed(2)}</td>
-                      </>
+                    {isUsdMode ? (
+                      <td className="text-right">{item.totalAmount.toFixed(2)}</td>
                     ) : (
                       <>
-                        <td className="text-right">{item.igstRate.toFixed(2)}</td>
-                        <td className="text-right">{item.igstAmount.toFixed(2)}</td>
+                        <td className="text-right">{item.taxableValue.toFixed(2)}</td>
+                        {isIntraState ? (
+                          <>
+                            <td className="text-right">{item.cgstRate.toFixed(2)}</td>
+                            <td className="text-right">{item.cgstAmount.toFixed(2)}</td>
+                            <td className="text-right">{item.sgstRate.toFixed(2)}</td>
+                            <td className="text-right">{item.sgstAmount.toFixed(2)}</td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text-right">{item.igstRate.toFixed(2)}</td>
+                            <td className="text-right">{item.igstAmount.toFixed(2)}</td>
+                          </>
+                        )}
+                        <td className="text-right">{item.totalAmount.toFixed(2)}</td>
                       </>
                     )}
-                    <td className="text-right">{item.totalAmount.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -161,37 +187,39 @@ const InvoicePreview = ({ invoiceData, onClose }) => {
           <div className="preview-totals-section">
             <div className="preview-amount-words">
               <p><strong>Amount in Words:</strong></p>
-              <p>{numberToWords(grandTotal)}</p>
+              <p>{fmtWords(grandTotal)}</p>
             </div>
             <div className="preview-totals-box">
               <div className="total-row">
                 <span>Subtotal:</span>
-                <span>₹{formatNumber(subtotal)}</span>
+                <span>{currencySymbol}{fmtNumber(subtotal)}</span>
               </div>
-              {isIntraState ? (
+              {!isUsdMode && (isIntraState ? (
                 <>
                   <div className="total-row">
                     <span>CGST:</span>
-                    <span>₹{formatNumber(totalCgst)}</span>
+                    <span>{currencySymbol}{fmtNumber(totalCgst)}</span>
                   </div>
                   <div className="total-row">
                     <span>SGST:</span>
-                    <span>₹{formatNumber(totalSgst)}</span>
+                    <span>{currencySymbol}{fmtNumber(totalSgst)}</span>
                   </div>
                 </>
               ) : (
                 <div className="total-row">
                   <span>IGST:</span>
-                  <span>₹{formatNumber(totalIgst)}</span>
+                  <span>{currencySymbol}{fmtNumber(totalIgst)}</span>
+                </div>
+              ))}
+              {!isUsdMode && (
+                <div className="total-row">
+                  <span>Total Tax:</span>
+                  <span>{currencySymbol}{fmtNumber(totalTaxAmount)}</span>
                 </div>
               )}
-              <div className="total-row">
-                <span>Total Tax:</span>
-                <span>₹{formatNumber(totalTaxAmount)}</span>
-              </div>
               <div className="total-row grand-total">
                 <span>Grand Total:</span>
-                <span>₹{formatNumber(grandTotal)}</span>
+                <span>{currencySymbol}{fmtNumber(grandTotal)}</span>
               </div>
             </div>
           </div>

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { supabase } from '../lib/supabase';
 import InvoiceForm from '../components/InvoiceForm';
 import InvoicePdf from '../components/InvoicePdf';
 import InvoicePreview from '../components/InvoicePreview';
-import { calculateInvoiceTotals } from '../utils/invoiceUtils';
+import { calculateInvoiceTotals, roundToTwo } from '../utils/invoiceUtils';
 import { saveInvoice, getInvoices, getNextInvoiceNumber, getInvoiceById, commitNextInvoiceNumber } from '../services/invoiceService';
 import './Invoice.css';
 
 const Invoice = () => {
+  const location = useLocation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [savedInvoice, setSavedInvoice] = useState(null);
@@ -39,6 +41,12 @@ const Invoice = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Reset to form view when navigating to this page via nav link
+  useEffect(() => {
+    setSavedInvoice(null);
+    setMessage({ type: '', text: '' });
+  }, [location.key]);
+
   const fetchNextInvoiceNumber = async () => {
     try {
       const { invoiceNumber, sequenceNumber, financialYear } = await getNextInvoiceNumber();
@@ -68,21 +76,45 @@ const Invoice = () => {
     setMessage({ type: '', text: '' });
 
     try {
+      const isUsdMode = formData.isUsdMode;
+      const exchangeRate = formData.usdRate;
+
       // Calculate totals with proper item calculations
       const calculatedData = calculateInvoiceTotals(
         formData.items.map(item => ({
           ...item,
           quantity: parseFloat(item.quantity),
           unitPrice: parseFloat(item.unitPrice),
-          gstRate: parseFloat(item.gstRate)
+          gstRate: isUsdMode ? 0 : parseFloat(item.gstRate)
         })),
         formData.placeOfSupply
       );
+
+      // Convert to USD if in USD mode
+      let finalCalcData = calculatedData;
+      if (isUsdMode && exchangeRate > 0) {
+        finalCalcData = {
+          ...calculatedData,
+          items: calculatedData.items.map(item => ({
+            ...item,
+            unitPrice: roundToTwo(item.unitPrice / exchangeRate),
+            taxableValue: roundToTwo(item.taxableValue / exchangeRate),
+            totalAmount: roundToTwo(item.taxableValue / exchangeRate),
+            cgstAmount: 0, sgstAmount: 0, igstAmount: 0,
+            cgstRate: 0, sgstRate: 0, igstRate: 0
+          })),
+          subtotal: roundToTwo(calculatedData.subtotal / exchangeRate),
+          totalCgst: 0, totalSgst: 0, totalIgst: 0,
+          totalTaxAmount: 0,
+          grandTotal: roundToTwo(calculatedData.subtotal / exchangeRate)
+        };
+      }
 
       // Commit the invoice number (this increments the sequence atomically)
       const { invoiceNumber, sequenceNumber } = await commitNextInvoiceNumber();
 
       // Prepare complete invoice data with committed invoice number
+      // Always store INR values in the database
       const invoiceData = {
         invoiceNumber: invoiceNumber,
         sequenceNumber: sequenceNumber,
@@ -95,6 +127,8 @@ const Invoice = () => {
         shippingPhone: formData.shippingPhone,
         shippingAddress: formData.shippingAddress,
         placeOfSupply: formData.placeOfSupply,
+        currencyMode: isUsdMode ? 'USD' : 'INR',
+        exchangeRate: isUsdMode ? exchangeRate : null,
         items: calculatedData.items,
         ...calculatedData
       };
@@ -106,8 +140,10 @@ const Invoice = () => {
       const pdfData = {
         ...formData,
         invoiceNumber: invoiceNumber,
-        items: calculatedData.items,
-        ...calculatedData
+        items: finalCalcData.items,
+        ...finalCalcData,
+        isUsdMode: isUsdMode || false,
+        usdRate: exchangeRate || null
       };
 
       setSavedInvoice(pdfData);
@@ -150,26 +186,34 @@ const Invoice = () => {
       const { invoice: fullInvoice, items } = await getInvoiceById(invoice.id);
       
       const isIntraState = fullInvoice.place_of_supply === 'Karnataka';
+      const isUsd = fullInvoice.currency_mode === 'USD';
+      const rate = fullInvoice.exchange_rate ? parseFloat(fullInvoice.exchange_rate) : 1;
       
-      // Transform items to match expected format
+      // DB stores INR values; convert to USD for display if needed
       const transformedItems = items.map(item => {
         const gstRate = parseFloat(item.gst_rate);
+        const unitPrice = parseFloat(item.unit_price);
+        const taxableValue = parseFloat(item.taxable_value);
+        const totalAmount = parseFloat(item.total_amount);
         return {
           description: item.description,
           hsnSacCode: item.hsn_sac_code,
           quantity: parseFloat(item.quantity),
-          unitPrice: parseFloat(item.unit_price),
-          taxableValue: parseFloat(item.taxable_value),
+          unitPrice: isUsd ? roundToTwo(unitPrice / rate) : unitPrice,
+          taxableValue: isUsd ? roundToTwo(taxableValue / rate) : taxableValue,
           gstRate: gstRate,
-          cgstRate: isIntraState ? gstRate / 2 : 0,
-          sgstRate: isIntraState ? gstRate / 2 : 0,
-          igstRate: isIntraState ? 0 : gstRate,
-          cgstAmount: parseFloat(item.cgst_amount || 0),
-          sgstAmount: parseFloat(item.sgst_amount || 0),
-          igstAmount: parseFloat(item.igst_amount || 0),
-          totalAmount: parseFloat(item.total_amount)
+          cgstRate: isUsd ? 0 : (isIntraState ? gstRate / 2 : 0),
+          sgstRate: isUsd ? 0 : (isIntraState ? gstRate / 2 : 0),
+          igstRate: isUsd ? 0 : (isIntraState ? 0 : gstRate),
+          cgstAmount: isUsd ? 0 : parseFloat(item.cgst_amount || 0),
+          sgstAmount: isUsd ? 0 : parseFloat(item.sgst_amount || 0),
+          igstAmount: isUsd ? 0 : parseFloat(item.igst_amount || 0),
+          totalAmount: isUsd ? roundToTwo(taxableValue / rate) : totalAmount
         };
       });
+
+      const subtotal = parseFloat(fullInvoice.subtotal);
+      const grandTotal = parseFloat(fullInvoice.grand_total);
 
       // Transform data to match the format expected by InvoicePreview
       const invoiceData = {
@@ -183,13 +227,15 @@ const Invoice = () => {
         shippingPhone: fullInvoice.shipping_phone,
         shippingAddress: fullInvoice.shipping_address,
         placeOfSupply: fullInvoice.place_of_supply,
+        isUsdMode: isUsd,
+        usdRate: isUsd ? rate : null,
         items: transformedItems,
-        subtotal: parseFloat(fullInvoice.subtotal),
-        totalCgst: parseFloat(fullInvoice.total_cgst || 0),
-        totalSgst: parseFloat(fullInvoice.total_sgst || 0),
-        totalIgst: parseFloat(fullInvoice.total_igst || 0),
-        totalTaxAmount: parseFloat(fullInvoice.total_tax_amount || 0),
-        grandTotal: parseFloat(fullInvoice.grand_total),
+        subtotal: isUsd ? roundToTwo(subtotal / rate) : subtotal,
+        totalCgst: isUsd ? 0 : parseFloat(fullInvoice.total_cgst || 0),
+        totalSgst: isUsd ? 0 : parseFloat(fullInvoice.total_sgst || 0),
+        totalIgst: isUsd ? 0 : parseFloat(fullInvoice.total_igst || 0),
+        totalTaxAmount: isUsd ? 0 : parseFloat(fullInvoice.total_tax_amount || 0),
+        grandTotal: isUsd ? roundToTwo(subtotal / rate) : grandTotal,
         isInterState: !isIntraState
       };
       
@@ -238,7 +284,7 @@ const Invoice = () => {
             <h2>Invoice Created Successfully!</h2>
             <p>Invoice Number: <strong>{savedInvoice.invoiceNumber}</strong></p>
             <p>Customer: <strong>{savedInvoice.customerName}</strong></p>
-            <p>Grand Total: <strong>₹{savedInvoice.grandTotal.toFixed(2)}</strong></p>
+            <p>Grand Total: <strong>{savedInvoice.isUsdMode ? '$' : '₹'}{savedInvoice.grandTotal.toFixed(2)}</strong></p>
             
             <div className="success-actions">
               <button className="btn-view" onClick={handleViewCurrentInvoice}>
@@ -270,28 +316,6 @@ const Invoice = () => {
               initialInvoiceNumber={nextInvoiceNumber?.invoiceNumber}
             />
           </div>
-          
-          {recentInvoices.length > 0 && (
-            <div className="recent-invoices">
-              <h3>Recent Invoices</h3>
-              <ul>
-                {recentInvoices.map(invoice => (
-                  <li key={invoice.id}>
-                    <span className="invoice-num">{invoice.invoice_number}</span>
-                    <span className="invoice-customer">{invoice.customer_name}</span>
-                    <span className="invoice-amount">₹{parseFloat(invoice.grand_total).toFixed(2)}</span>
-                    <button 
-                      className="btn-view-small" 
-                      onClick={() => handleViewHistoryInvoice(invoice)}
-                      title="View Invoice"
-                    >
-                      View
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
       )}
 

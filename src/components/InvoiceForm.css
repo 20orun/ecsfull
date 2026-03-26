@@ -137,9 +137,9 @@
   margin-bottom: 15px;
 }
 
-.items-header {
+.invoice-form-container .items-header {
   display: grid;
-  grid-template-columns: 2fr 1fr 0.8fr 1fr 1fr 1fr 1.5fr;
+  grid-template-columns: minmax(0,2.5fr) minmax(0,0.8fr) minmax(0,0.6fr) minmax(0,1.4fr) minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,1.2fr);
   gap: 10px;
   padding: 12px 15px;
   background: #f8f9fa;
@@ -149,36 +149,63 @@
   border-bottom: 2px solid #e0e0e0;
 }
 
-.items-row {
+.invoice-form-container .items-header > * {
+  white-space: nowrap;
+}
+
+.invoice-form-container .items-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 0.8fr 1fr 1fr 1fr 1.5fr;
+  grid-template-columns: minmax(0,2.5fr) minmax(0,0.8fr) minmax(0,0.6fr) minmax(0,1.4fr) minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,1.2fr);
   gap: 10px;
   padding: 12px 15px;
   border-bottom: 1px solid #eee;
   align-items: center;
 }
 
-.items-row.billed {
-  background: #e8f5e9;
-  border-left: 4px solid #27ae60;
+.invoice-form-container .items-row > * {
+  min-width: 0;
 }
 
-.items-row:last-child {
+/* USD mode grid */
+.invoice-form-container .usd-items .items-header,
+.invoice-form-container .usd-items .items-row {
+  grid-template-columns: minmax(0,2.5fr) minmax(0,0.8fr) minmax(0,0.6fr) minmax(0,1.4fr) minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,1.2fr);
+}
+
+.invoice-form-container .items-row.billed {
+  background: #e8f5e9;
+  box-shadow: inset 4px 0 0 #27ae60;
+}
+
+.invoice-form-container .items-row:last-child {
   border-bottom: none;
 }
 
-.items-row input,
-.items-row select {
+.invoice-form-container .items-row input,
+.invoice-form-container .items-row select {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 0.9rem;
   width: 100%;
+  min-width: 0;
   box-sizing: border-box;
 }
 
-.items-row input:focus,
-.items-row select:focus {
+.invoice-form-container .items-row input[type="number"] {
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.invoice-form-container .items-row input[type="number"]::-webkit-inner-spin-button,
+.invoice-form-container .items-row input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.invoice-form-container .items-row input:focus,
+.invoice-form-container .items-row select:focus {
   outline: none;
   border-color: #3498db;
 }
@@ -188,8 +215,12 @@
   color: #2c3e50;
 }
 
+.calculated-value.calculated-usd {
+  color: #2980b9;
+}
+
 .col-action-wide {
-  min-width: 180px;
+  overflow: visible !important;
 }
 
 .action-buttons {
@@ -365,13 +396,16 @@
   font-weight: 500;
 }
 
-.total-row.grand-total {
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: #2c3e50;
+.total-row.invoice-grand-total {
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
+  color: white !important;
+  background: #2c3e50 !important;
   border-bottom: none;
-  padding-top: 15px;
+  padding: 12px 15px !important;
   border-top: 2px solid #3498db;
+  border-radius: 6px;
+  margin-top: 10px;
 }
 
 /* Form Actions */
@@ -422,9 +456,13 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .items-header,
-  .items-row {
-    grid-template-columns: 1.5fr 1fr 0.8fr 1fr 0.8fr 1fr 0.5fr;
+  .invoice-form-container .items-header,
+  .invoice-form-container .items-row {
+    grid-template-columns: minmax(0,2fr) minmax(0,0.8fr) minmax(0,0.6fr) minmax(0,1.3fr) minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,0.5fr);
+  }
+  .invoice-form-container .usd-items .items-header,
+  .invoice-form-container .usd-items .items-row {
+    grid-template-columns: minmax(0,2fr) minmax(0,0.8fr) minmax(0,0.6fr) minmax(0,1.3fr) minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,0.5fr);
   }
 }
 
@@ -445,11 +483,11 @@
     padding: 20px 15px;
   }
 
-  .items-header {
+  .invoice-form-container .items-header {
     display: none;
   }
 
-  .items-row {
+  .invoice-form-container .items-row {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -459,12 +497,12 @@
     border-radius: 8px;
   }
 
-  .items-row > div {
+  .invoice-form-container .items-row > div {
     width: 100%;
   }
 
-  .items-row input,
-  .items-row select {
+  .invoice-form-container .items-row input,
+  .invoice-form-container .items-row select {
     width: 100%;
   }
 
@@ -513,4 +551,75 @@
 
 .checkbox-group label:hover {
   color: #2c3e50;
+}
+
+/* Currency Toggle Section */
+.currency-toggle-section {
+  background: #f0f8ff;
+}
+
+.currency-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-currency-toggle {
+  background: #f8f9fa;
+  color: #2c3e50;
+  border: 2px solid #3498db;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-currency-toggle:hover {
+  background: #e8f4fd;
+}
+
+.btn-currency-toggle.active {
+  background: #3498db;
+  color: white;
+}
+
+.exchange-rate-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exchange-rate-group label {
+  font-weight: 600;
+  color: #2c3e50;
+  white-space: nowrap;
+}
+
+.exchange-rate-input {
+  width: 120px;
+  padding: 10px 12px;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.exchange-rate-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.rate-label {
+  font-weight: 500;
+  color: #555;
+}
+
+.usd-note {
+  font-size: 0.85rem;
+  color: #e67e22;
+  font-weight: 500;
+  font-style: italic;
 }

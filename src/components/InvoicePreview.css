@@ -226,7 +226,7 @@
   font-size: 0.9rem;
 }
 
-.total-row.grand-total {
+.preview-totals-box .total-row.grand-total {
   background: #2c3e50;
   color: white;
   font-weight: 600;

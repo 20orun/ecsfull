@@ -3,7 +3,9 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { FIRM_CONFIG, INDIAN_STATES, GST_RATES } from '../config/firmConfig';
 import { 
   calculateInvoiceTotals, 
-  formatCurrency, 
+  formatCurrency,
+  formatCurrencyUsd,
+  roundToTwo,
   generateInvoiceNumber,
   validateGSTIN 
 } from '../utils/invoiceUtils';
@@ -14,6 +16,8 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
   const [billedItems, setBilledItems] = useState([]);
   // Track if shipping address is same as billing
   const [sameAsShipping, setSameAsShipping] = useState(false);
+  const [isUsdMode, setIsUsdMode] = useState(false);
+  const [usdRate, setUsdRate] = useState('94');
 
   const defaultValues = useMemo(() => ({
     customerName: '',
@@ -61,6 +65,13 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
 
   const isIntraState = watchPlaceOfSupply === FIRM_CONFIG.state;
 
+  const convertAmount = useCallback((inrAmount) => {
+    if (!isUsdMode) return inrAmount;
+    const rate = parseFloat(usdRate);
+    if (!rate || rate <= 0) return inrAmount;
+    return roundToTwo(inrAmount / rate);
+  }, [isUsdMode, usdRate]);
+
   // Calculate totals based only on billed items
   const totals = useMemo(() => {
     if (billedItems.length === 0) {
@@ -79,11 +90,33 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
       ...item,
       quantity: parseFloat(item.quantity) || 0,
       unitPrice: parseFloat(item.unitPrice) || 0,
-      gstRate: parseFloat(item.gstRate) || 0
+      gstRate: isUsdMode ? 0 : (parseFloat(item.gstRate) || 0)
     }));
     
-    return calculateInvoiceTotals(itemsToCalculate, watchPlaceOfSupply);
-  }, [billedItems, watchPlaceOfSupply]);
+    const result = calculateInvoiceTotals(itemsToCalculate, isUsdMode ? FIRM_CONFIG.state : watchPlaceOfSupply);
+
+    if (isUsdMode) {
+      const rate = parseFloat(usdRate);
+      if (rate > 0) {
+        return {
+          items: result.items.map(item => ({
+            ...item,
+            unitPrice: roundToTwo(item.unitPrice / rate),
+            taxableValue: roundToTwo(item.taxableValue / rate),
+            totalAmount: roundToTwo(item.taxableValue / rate),
+            cgstAmount: 0, sgstAmount: 0, igstAmount: 0,
+            cgstRate: 0, sgstRate: 0, igstRate: 0
+          })),
+          subtotal: roundToTwo(result.subtotal / rate),
+          totalCgst: 0, totalSgst: 0, totalIgst: 0,
+          totalTaxAmount: 0,
+          grandTotal: roundToTwo(result.subtotal / rate)
+        };
+      }
+    }
+
+    return result;
+  }, [billedItems, watchPlaceOfSupply, isUsdMode, usdRate]);
 
   // Check if an item is already billed (by index in form)
   const isItemBilled = useCallback((index) => {
@@ -174,17 +207,19 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
     // Prepare data with calculated values using only billed items
     const invoiceData = {
       ...data,
+      isUsdMode,
+      usdRate: isUsdMode ? parseFloat(usdRate) : null,
       shippingName: sameAsShipping ? data.customerName : data.shippingName,
       shippingPhone: sameAsShipping ? data.customerPhone : data.shippingPhone,
       shippingAddress: sameAsShipping ? data.customerAddress : data.shippingAddress,
+      ...totals,
       items: billedItems.map(item => ({
         description: item.description,
         hsnSacCode: item.hsnSacCode,
         quantity: parseFloat(item.quantity),
         unitPrice: parseFloat(item.unitPrice),
-        gstRate: parseFloat(item.gstRate)
-      })),
-      ...totals
+        gstRate: isUsdMode ? 0 : parseFloat(item.gstRate)
+      }))
     };
 
     onSubmit(invoiceData);
@@ -193,6 +228,8 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
   const handleReset = useCallback(() => {
     setBilledItems([]);
     setSameAsShipping(false);
+    setIsUsdMode(false);
+    setUsdRate('94');
     reset({
       ...defaultValues,
       invoiceNumber: generateInvoiceNumber()
@@ -371,17 +408,50 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
           </div>
         </div>
 
+        {/* Currency Mode */}
+        <div className="form-section currency-toggle-section">
+          <h3>Currency</h3>
+          <div className="currency-toggle-row">
+            <button
+              type="button"
+              className={`btn-currency-toggle ${isUsdMode ? 'active' : ''}`}
+              onClick={() => setIsUsdMode(!isUsdMode)}
+            >
+              {isUsdMode ? '₹ Switch to INR' : '$ Switch to USD'}
+            </button>
+            {isUsdMode && (
+              <div className="exchange-rate-group">
+                <label>1 USD = </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  value={usdRate}
+                  onChange={(e) => setUsdRate(e.target.value)}
+                  placeholder="e.g. 83.50"
+                  className="exchange-rate-input"
+                />
+                <span className="rate-label">INR</span>
+              </div>
+            )}
+            {isUsdMode && (
+              <span className="usd-note">GST/IGST will not be applied in USD mode</span>
+            )}
+          </div>
+        </div>
+
         {/* Line Items */}
         <div className="form-section">
           <h3>Invoice Items</h3>
-          <div className="items-table">
+          <div className={`items-table ${isUsdMode ? 'usd-items' : ''}`}>
             <div className="items-header">
               <span className="col-desc">Description</span>
               <span className="col-hsn">HSN/SAC</span>
               <span className="col-qty">Qty</span>
               <span className="col-rate">Unit Price (₹)</span>
-              <span className="col-gst">GST %</span>
-              <span className="col-taxable">Taxable (₹)</span>
+              {!isUsdMode && <span className="col-gst">GST %</span>}
+              <span className="col-taxable">Amount (₹)</span>
+              {isUsdMode && <span className="col-taxable-usd">Amount ($)</span>}
               <span className="col-action-wide">Actions</span>
             </div>
             
@@ -430,21 +500,28 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
                       className={errors.items?.[index]?.unitPrice ? 'error' : ''}
                     />
                   </div>
-                  <div className="col-gst">
-                    <select
-                      {...register(`items.${index}.gstRate`, { 
-                        required: true,
-                        valueAsNumber: true 
-                      })}
-                    >
-                      {GST_RATES.map(rate => (
-                        <option key={rate} value={rate}>{rate}%</option>
-                      ))}
-                    </select>
-                  </div>
+                  {!isUsdMode && (
+                    <div className="col-gst">
+                      <select
+                        {...register(`items.${index}.gstRate`, { 
+                          required: true,
+                          valueAsNumber: true 
+                        })}
+                      >
+                        {GST_RATES.map(rate => (
+                          <option key={rate} value={rate}>{rate}%</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                   <div className="col-taxable">
                     <span className="calculated-value">{formatCurrency(taxableValue)}</span>
                   </div>
+                  {isUsdMode && (
+                    <div className="col-taxable-usd">
+                      <span className="calculated-value calculated-usd">{formatCurrencyUsd(convertAmount(taxableValue))}</span>
+                    </div>
+                  )}
                   <div className="col-action-wide">
                     <div className="action-buttons">
                       {isBilled ? (
@@ -510,41 +587,56 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
                 <ul>
                   {billedItems.map((item, idx) => (
                     <li key={idx}>
-                      {item.description} - Qty: {item.quantity} × ₹{item.unitPrice} = {formatCurrency(item.quantity * item.unitPrice)}
+                      {item.description} - Qty: {item.quantity} × {isUsdMode ? formatCurrencyUsd(convertAmount(item.unitPrice)) : formatCurrency(item.unitPrice)} = {isUsdMode ? formatCurrencyUsd(convertAmount(item.quantity * item.unitPrice)) : formatCurrency(item.quantity * item.unitPrice)}
                     </li>
                   ))}
                 </ul>
               </div>
               <div className="totals-grid">
-                <div className="total-row">
-                  <span>Subtotal:</span>
-                  <span>{formatCurrency(totals.subtotal)}</span>
-                </div>
-                {isIntraState ? (
+                {isUsdMode ? (
                   <>
                     <div className="total-row">
-                      <span>CGST:</span>
-                      <span>{formatCurrency(totals.totalCgst)}</span>
+                      <span>Subtotal:</span>
+                      <span>{formatCurrencyUsd(totals.subtotal)}</span>
                     </div>
-                    <div className="total-row">
-                      <span>SGST:</span>
-                      <span>{formatCurrency(totals.totalSgst)}</span>
+                    <div className="total-row invoice-grand-total">
+                      <span>Grand Total:</span>
+                      <span>{formatCurrencyUsd(totals.grandTotal)}</span>
                     </div>
                   </>
                 ) : (
-                  <div className="total-row">
-                    <span>IGST:</span>
-                    <span>{formatCurrency(totals.totalIgst)}</span>
-                  </div>
+                  <>
+                    <div className="total-row">
+                      <span>Subtotal:</span>
+                      <span>{formatCurrency(totals.subtotal)}</span>
+                    </div>
+                    {isIntraState ? (
+                      <>
+                        <div className="total-row">
+                          <span>CGST:</span>
+                          <span>{formatCurrency(totals.totalCgst)}</span>
+                        </div>
+                        <div className="total-row">
+                          <span>SGST:</span>
+                          <span>{formatCurrency(totals.totalSgst)}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="total-row">
+                        <span>IGST:</span>
+                        <span>{formatCurrency(totals.totalIgst)}</span>
+                      </div>
+                    )}
+                    <div className="total-row total-tax">
+                      <span>Total Tax:</span>
+                      <span>{formatCurrency(totals.totalTaxAmount)}</span>
+                    </div>
+                    <div className="total-row invoice-grand-total">
+                      <span>Grand Total:</span>
+                      <span>{formatCurrency(totals.grandTotal)}</span>
+                    </div>
+                  </>
                 )}
-                <div className="total-row total-tax">
-                  <span>Total Tax:</span>
-                  <span>{formatCurrency(totals.totalTaxAmount)}</span>
-                </div>
-                <div className="total-row grand-total">
-                  <span>Grand Total:</span>
-                  <span>{formatCurrency(totals.grandTotal)}</span>
-                </div>
               </div>
             </>
           )}

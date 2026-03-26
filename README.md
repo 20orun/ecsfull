@@ -1,3 +1,16 @@
+# Excel Care Solutions React App
+
+## Environment Setup
+
+Supabase-backed features require these environment variables in a `.env.local` file at the project root:
+
+```env
+REACT_APP_SUPABASE_URL=your-project-url
+REACT_APP_SUPABASE_ANON_KEY=your-anon-key
+```
+
+Restart `npm start` after adding or changing environment variables.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

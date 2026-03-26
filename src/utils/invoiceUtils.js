@@ -116,6 +116,26 @@ export const formatNumber = (amount) => {
 };
 
 /**
+ * Format currency in US Dollars with symbol
+ */
+export const formatCurrencyUsd = (amount) => {
+  return '$' + new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+};
+
+/**
+ * Format number in US style without currency symbol
+ */
+export const formatNumberUsd = (amount) => {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+};
+
+/**
  * Convert number to words (Indian numbering system)
  * @param {number} num - Number to convert
  * @returns {string} Number in words
@@ -162,6 +182,51 @@ export const numberToWords = (num) => {
     result += (rupees > 0 ? ' and ' : '') + convertLessThanThousand(paise) + ' Paise';
   }
   
+  return result.trim() + ' Only';
+};
+
+/**
+ * Convert number to words (US numbering system - Dollars/Cents)
+ */
+export const numberToWordsUsd = (num) => {
+  if (num === 0) return 'Zero Dollars Only';
+
+  const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+    'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+  const convertLessThanThousand = (n) => {
+    if (n === 0) return '';
+    if (n < 20) return ones[n];
+    if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + ones[n % 10] : '');
+    return ones[Math.floor(n / 100)] + ' Hundred' + (n % 100 !== 0 ? ' ' + convertLessThanThousand(n % 100) : '');
+  };
+
+  if (num < 0) return 'Negative ' + numberToWordsUsd(Math.abs(num));
+
+  const dollars = Math.floor(num);
+  const cents = Math.round((num - dollars) * 100);
+
+  let result = '';
+
+  if (dollars > 0) {
+    const billion = Math.floor(dollars / 1000000000);
+    const million = Math.floor((dollars % 1000000000) / 1000000);
+    const thousand = Math.floor((dollars % 1000000) / 1000);
+    const hundred = dollars % 1000;
+
+    if (billion > 0) result += convertLessThanThousand(billion) + ' Billion ';
+    if (million > 0) result += convertLessThanThousand(million) + ' Million ';
+    if (thousand > 0) result += convertLessThanThousand(thousand) + ' Thousand ';
+    if (hundred > 0) result += convertLessThanThousand(hundred);
+
+    result = result.trim() + ' Dollars';
+  }
+
+  if (cents > 0) {
+    result += (dollars > 0 ? ' and ' : '') + convertLessThanThousand(cents) + ' Cents';
+  }
+
   return result.trim() + ' Only';
 };
 

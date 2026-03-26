@@ -121,6 +121,12 @@
   flex-wrap: wrap;
 }
 
+.success-actions > * {
+  flex: 0 0 auto;
+  width: 220px;
+  box-sizing: border-box;
+}
+
 .btn-download {
   background: #27ae60;
   color: white;
@@ -129,7 +135,11 @@
   border-radius: 8px;
   font-weight: 600;
   transition: background 0.3s ease;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  box-sizing: border-box;
 }
 
 .btn-download:hover {
@@ -145,6 +155,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
+  width: 220px;
+  box-sizing: border-box;
 }
 
 .btn-view:hover {
@@ -160,6 +172,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
+  width: 220px;
+  box-sizing: border-box;
 }
 
 .btn-new:hover {

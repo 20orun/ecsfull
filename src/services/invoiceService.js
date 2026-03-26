@@ -104,6 +104,8 @@ export const saveInvoice = async (invoiceData) => {
       shipping_phone: invoiceData.shippingPhone || null,
       shipping_address: invoiceData.shippingAddress || null,
       place_of_supply: invoiceData.placeOfSupply,
+      currency_mode: invoiceData.currencyMode || 'INR',
+      exchange_rate: invoiceData.exchangeRate || null,
       subtotal: invoiceData.subtotal,
       total_cgst: invoiceData.totalCgst,
       total_sgst: invoiceData.totalSgst,

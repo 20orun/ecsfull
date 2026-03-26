@@ -1,7 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 import { FIRM_CONFIG } from '../config/firmConfig';
-import { numberToWords, formatCurrency, formatNumber, formatDate } from '../utils/invoiceUtils';
+import { numberToWords, numberToWordsUsd, formatCurrency, formatNumber, formatNumberUsd, formatDate } from '../utils/invoiceUtils';
 
 // Get the logo URL - use absolute URL for production PDF generation
 const getLogoUrl = () => {
@@ -331,6 +331,10 @@ const InvoicePdf = ({ invoiceData }) => {
   } = invoiceData;
 
   const isIntraState = placeOfSupply === FIRM_CONFIG.state;
+  const isUsdMode = invoiceData.isUsdMode || false;
+  const currencySymbol = isUsdMode ? '$' : '₹';
+  const fmtNumber = isUsdMode ? formatNumberUsd : formatNumber;
+  const fmtWords = isUsdMode ? numberToWordsUsd : numberToWords;
 
   return (
     <Document>
@@ -348,7 +352,7 @@ const InvoicePdf = ({ invoiceData }) => {
             </View>
           </View>
           <View style={styles.invoiceTitle}>
-            <Text style={styles.taxInvoice}>TAX INVOICE</Text>
+            <Text style={styles.taxInvoice}>{isUsdMode ? 'INVOICE' : 'TAX INVOICE'}</Text>
           </View>
         </View>
 
@@ -367,7 +371,7 @@ const InvoicePdf = ({ invoiceData }) => {
             <Text style={styles.detailsTitle}>Place of Supply</Text>
             <Text style={styles.detailsText}>{placeOfSupply}</Text>
             <Text style={styles.detailsText}>
-              {placeOfSupply === FIRM_CONFIG.state ? 'Intra-State (CGST + SGST)' : 'Inter-State (IGST)'}
+              {isUsdMode ? 'Currency: USD' : (placeOfSupply === FIRM_CONFIG.state ? 'Intra-State (CGST + SGST)' : 'Inter-State (IGST)')}
             </Text>
           </View>
         </View>
@@ -408,50 +412,63 @@ const InvoicePdf = ({ invoiceData }) => {
         {/* Items Table */}
         <View style={styles.table}>
           {/* Header Row 1 - Main headers */}
-          <View style={styles.tableHeaderRow1}>
-            <Text style={{...styles.colSr, borderRight: '1px solid #4a6278'}}>Sr.</Text>
-            <Text style={{...styles.colDesc, borderRight: '1px solid #4a6278'}}>Description</Text>
-            <Text style={{...styles.colHsn, borderRight: '1px solid #4a6278'}}>HSN/SAC</Text>
-            <Text style={{...styles.colQty, borderRight: '1px solid #4a6278'}}>Qty</Text>
-            <Text style={{...styles.colRate, borderRight: '1px solid #4a6278'}}>Rate</Text>
-            <Text style={{...styles.colTaxable, borderRight: '1px solid #4a6278'}}>Taxable Amt</Text>
-            {isIntraState ? (
-              <>
-                <Text style={{ width: '10%', textAlign: 'center', borderRight: '1px solid #4a6278' }}>CGST</Text>
-                <Text style={{ width: '10%', textAlign: 'center', borderRight: '1px solid #4a6278' }}>SGST</Text>
-              </>
-            ) : (
-              <Text style={{ width: '20%', textAlign: 'center', borderRight: '1px solid #4a6278' }}>IGST</Text>
-            )}
-            <Text style={styles.colTotal}>Total</Text>
-          </View>
-          {/* Header Row 2 - Sub headers (% and Amt) */}
-          <View style={styles.tableHeaderRow2}>
-            <Text style={{...styles.colSr, borderRight: '1px solid #4a6278'}}></Text>
-            <Text style={{...styles.colDesc, borderRight: '1px solid #4a6278'}}></Text>
-            <Text style={{...styles.colHsn, borderRight: '1px solid #4a6278'}}></Text>
-            <Text style={{...styles.colQty, borderRight: '1px solid #4a6278'}}></Text>
-            <Text style={{...styles.colRate, borderRight: '1px solid #4a6278'}}></Text>
-            <Text style={{...styles.colTaxable, borderRight: '1px solid #4a6278'}}></Text>
-            {isIntraState ? (
-              <>
-                <View style={styles.subHeaderContainer}>
-                  <Text style={styles.subHeaderText}>%</Text>
-                  <Text style={styles.subHeaderText}>Amt</Text>
-                </View>
-                <View style={styles.subHeaderContainer}>
-                  <Text style={styles.subHeaderText}>%</Text>
-                  <Text style={styles.subHeaderText}>Amt</Text>
-                </View>
-              </>
-            ) : (
-              <View style={styles.subHeaderContainerWide}>
-                <Text style={styles.subHeaderText}>%</Text>
-                <Text style={styles.subHeaderText}>Amt</Text>
+          {isUsdMode ? (
+            <View style={styles.tableHeaderRow1}>
+              <Text style={{...styles.colSr, borderRight: '1px solid #4a6278'}}>Sr.</Text>
+              <Text style={{...styles.colDesc, borderRight: '1px solid #4a6278', width: '30%'}}>Description</Text>
+              <Text style={{...styles.colHsn, borderRight: '1px solid #4a6278'}}>HSN/SAC</Text>
+              <Text style={{...styles.colQty, borderRight: '1px solid #4a6278'}}>Qty</Text>
+              <Text style={{...styles.colRate, borderRight: '1px solid #4a6278', width: '15%'}}>Rate ($)</Text>
+              <Text style={{...styles.colTotal, width: '15%'}}>Amount ($)</Text>
+            </View>
+          ) : (
+            <>
+              <View style={styles.tableHeaderRow1}>
+                <Text style={{...styles.colSr, borderRight: '1px solid #4a6278'}}>Sr.</Text>
+                <Text style={{...styles.colDesc, borderRight: '1px solid #4a6278'}}>Description</Text>
+                <Text style={{...styles.colHsn, borderRight: '1px solid #4a6278'}}>HSN/SAC</Text>
+                <Text style={{...styles.colQty, borderRight: '1px solid #4a6278'}}>Qty</Text>
+                <Text style={{...styles.colRate, borderRight: '1px solid #4a6278'}}>Rate</Text>
+                <Text style={{...styles.colTaxable, borderRight: '1px solid #4a6278'}}>Taxable Amt</Text>
+                {isIntraState ? (
+                  <>
+                    <Text style={{ width: '10%', textAlign: 'center', borderRight: '1px solid #4a6278' }}>CGST</Text>
+                    <Text style={{ width: '10%', textAlign: 'center', borderRight: '1px solid #4a6278' }}>SGST</Text>
+                  </>
+                ) : (
+                  <Text style={{ width: '20%', textAlign: 'center', borderRight: '1px solid #4a6278' }}>IGST</Text>
+                )}
+                <Text style={styles.colTotal}>Total</Text>
               </View>
-            )}
-            <Text style={styles.colTotal}></Text>
-          </View>
+              {/* Header Row 2 - Sub headers (% and Amt) */}
+              <View style={styles.tableHeaderRow2}>
+                <Text style={{...styles.colSr, borderRight: '1px solid #4a6278'}}></Text>
+                <Text style={{...styles.colDesc, borderRight: '1px solid #4a6278'}}></Text>
+                <Text style={{...styles.colHsn, borderRight: '1px solid #4a6278'}}></Text>
+                <Text style={{...styles.colQty, borderRight: '1px solid #4a6278'}}></Text>
+                <Text style={{...styles.colRate, borderRight: '1px solid #4a6278'}}></Text>
+                <Text style={{...styles.colTaxable, borderRight: '1px solid #4a6278'}}></Text>
+                {isIntraState ? (
+                  <>
+                    <View style={styles.subHeaderContainer}>
+                      <Text style={styles.subHeaderText}>%</Text>
+                      <Text style={styles.subHeaderText}>Amt</Text>
+                    </View>
+                    <View style={styles.subHeaderContainer}>
+                      <Text style={styles.subHeaderText}>%</Text>
+                      <Text style={styles.subHeaderText}>Amt</Text>
+                    </View>
+                  </>
+                ) : (
+                  <View style={styles.subHeaderContainerWide}>
+                    <Text style={styles.subHeaderText}>%</Text>
+                    <Text style={styles.subHeaderText}>Amt</Text>
+                  </View>
+                )}
+                <Text style={styles.colTotal}></Text>
+              </View>
+            </>
+          )}
 
           {items.map((item, index) => (
             <View 
@@ -459,29 +476,41 @@ const InvoicePdf = ({ invoiceData }) => {
               style={index % 2 === 0 ? styles.tableRow : styles.tableRowAlt}
             >
               <Text style={styles.colSr}>{index + 1}</Text>
-              <Text style={styles.colDesc}>{item.description}</Text>
-              <Text style={styles.colHsn}>{item.hsnSacCode}</Text>
-              <Text style={styles.colQty}>{item.quantity}</Text>
-              <Text style={styles.colRate}>{item.unitPrice.toFixed(2)}</Text>
-              <Text style={styles.colTaxable}>{item.taxableValue.toFixed(2)}</Text>
-              {isIntraState ? (
+              {isUsdMode ? (
                 <>
-                  <View style={styles.taxColumnGroup}>
-                    <Text style={styles.taxPercent}>{item.cgstRate.toFixed(2)}</Text>
-                    <Text style={styles.taxAmount}>{item.cgstAmount.toFixed(2)}</Text>
-                  </View>
-                  <View style={styles.taxColumnGroup}>
-                    <Text style={styles.taxPercent}>{item.sgstRate.toFixed(2)}</Text>
-                    <Text style={styles.taxAmount}>{item.sgstAmount.toFixed(2)}</Text>
-                  </View>
+                  <Text style={{...styles.colDesc, width: '30%'}}>{item.description}</Text>
+                  <Text style={styles.colHsn}>{item.hsnSacCode}</Text>
+                  <Text style={styles.colQty}>{item.quantity}</Text>
+                  <Text style={{...styles.colRate, width: '15%'}}>{item.unitPrice.toFixed(2)}</Text>
+                  <Text style={{...styles.colTotal, width: '15%'}}>{item.totalAmount.toFixed(2)}</Text>
                 </>
               ) : (
-                <View style={styles.taxColumnGroupWide}>
-                  <Text style={styles.taxPercent}>{item.igstRate.toFixed(2)}</Text>
-                  <Text style={styles.taxAmount}>{item.igstAmount.toFixed(2)}</Text>
-                </View>
+                <>
+                  <Text style={styles.colDesc}>{item.description}</Text>
+                  <Text style={styles.colHsn}>{item.hsnSacCode}</Text>
+                  <Text style={styles.colQty}>{item.quantity}</Text>
+                  <Text style={styles.colRate}>{item.unitPrice.toFixed(2)}</Text>
+                  <Text style={styles.colTaxable}>{item.taxableValue.toFixed(2)}</Text>
+                  {isIntraState ? (
+                    <>
+                      <View style={styles.taxColumnGroup}>
+                        <Text style={styles.taxPercent}>{item.cgstRate.toFixed(2)}</Text>
+                        <Text style={styles.taxAmount}>{item.cgstAmount.toFixed(2)}</Text>
+                      </View>
+                      <View style={styles.taxColumnGroup}>
+                        <Text style={styles.taxPercent}>{item.sgstRate.toFixed(2)}</Text>
+                        <Text style={styles.taxAmount}>{item.sgstAmount.toFixed(2)}</Text>
+                      </View>
+                    </>
+                  ) : (
+                    <View style={styles.taxColumnGroupWide}>
+                      <Text style={styles.taxPercent}>{item.igstRate.toFixed(2)}</Text>
+                      <Text style={styles.taxAmount}>{item.igstAmount.toFixed(2)}</Text>
+                    </View>
+                  )}
+                  <Text style={styles.colTotal}>{item.totalAmount.toFixed(2)}</Text>
+                </>
               )}
-              <Text style={styles.colTotal}>{item.totalAmount.toFixed(2)}</Text>
             </View>
           ))}
         </View>
@@ -491,32 +520,34 @@ const InvoicePdf = ({ invoiceData }) => {
           <View style={styles.totalsBox}>
             <View style={styles.totalRow}>
               <Text style={styles.totalLabel}>Subtotal:</Text>
-              <Text>₹{formatNumber(subtotal)}</Text>
+              <Text>{currencySymbol}{fmtNumber(subtotal)}</Text>
             </View>
-            {isIntraState ? (
+            {!isUsdMode && (isIntraState ? (
               <>
                 <View style={styles.totalRow}>
                   <Text style={styles.totalLabel}>CGST:</Text>
-                  <Text>₹{formatNumber(totalCgst)}</Text>
+                  <Text>{currencySymbol}{fmtNumber(totalCgst)}</Text>
                 </View>
                 <View style={styles.totalRow}>
                   <Text style={styles.totalLabel}>SGST:</Text>
-                  <Text>₹{formatNumber(totalSgst)}</Text>
+                  <Text>{currencySymbol}{fmtNumber(totalSgst)}</Text>
                 </View>
               </>
             ) : (
               <View style={styles.totalRow}>
                 <Text style={styles.totalLabel}>IGST:</Text>
-                <Text>₹{formatNumber(totalIgst)}</Text>
+                <Text>{currencySymbol}{fmtNumber(totalIgst)}</Text>
+              </View>
+            ))}
+            {!isUsdMode && (
+              <View style={styles.totalRow}>
+                <Text style={styles.totalLabel}>Total Tax:</Text>
+                <Text>{currencySymbol}{fmtNumber(totalTaxAmount)}</Text>
               </View>
             )}
-            <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Total Tax:</Text>
-              <Text>₹{formatNumber(totalTaxAmount)}</Text>
-            </View>
             <View style={styles.totalRowGrand}>
               <Text>Grand Total:</Text>
-              <Text>₹{formatNumber(grandTotal)}</Text>
+              <Text>{currencySymbol}{fmtNumber(grandTotal)}</Text>
             </View>
           </View>
         </View>
@@ -524,7 +555,7 @@ const InvoicePdf = ({ invoiceData }) => {
         {/* Amount in Words */}
         <View style={styles.amountWords}>
           <Text style={styles.amountWordsLabel}>Amount in Words:</Text>
-          <Text style={styles.amountWordsText}>{numberToWords(grandTotal)}</Text>
+          <Text style={styles.amountWordsText}>{fmtWords(grandTotal)}</Text>
         </View>
 
         {/* Footer */}

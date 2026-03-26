@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { isSupabaseConfigured, supabase, supabaseConfigErrorMessage } from '../lib/supabase';
 import './Auth.css';
 
 const Login = () => {
@@ -108,6 +108,12 @@ const Login = () => {
           </div>
         )}
 
+        {!isSupabaseConfigured && (
+          <div className="auth-message error">
+            {supabaseConfigErrorMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSignIn} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">Email</label>
@@ -138,7 +144,7 @@ const Login = () => {
             />
           </div>
           
-          <button type="submit" className="auth-button" disabled={loading}>
+          <button type="submit" className="auth-button" disabled={loading || !isSupabaseConfigured}>
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>

@@ -3,6 +3,7 @@ import { pdf } from '@react-pdf/renderer';
 import { supabase } from '../lib/supabase';
 import InvoicePreview from '../components/InvoicePreview';
 import InvoicePdf from '../components/InvoicePdf';
+import { roundToTwo } from '../utils/invoiceUtils';
 import { getInvoices, getInvoiceById } from '../services/invoiceService';
 import './InvoiceHistory.css';
 
@@ -46,53 +47,65 @@ const InvoiceHistory = () => {
     }
   };
 
+  const transformInvoiceData = (fullInvoice, items) => {
+    const isIntraState = fullInvoice.place_of_supply === 'Karnataka';
+    const isUsd = fullInvoice.currency_mode === 'USD';
+    const rate = fullInvoice.exchange_rate ? parseFloat(fullInvoice.exchange_rate) : 1;
+
+    // DB stores INR values; convert to USD for display if needed
+    const transformedItems = items.map(item => {
+      const gstRate = parseFloat(item.gst_rate);
+      const unitPrice = parseFloat(item.unit_price);
+      const taxableValue = parseFloat(item.taxable_value);
+      const totalAmount = parseFloat(item.total_amount);
+      return {
+        description: item.description,
+        hsnSacCode: item.hsn_sac_code,
+        quantity: parseFloat(item.quantity),
+        unitPrice: isUsd ? roundToTwo(unitPrice / rate) : unitPrice,
+        taxableValue: isUsd ? roundToTwo(taxableValue / rate) : taxableValue,
+        gstRate: gstRate,
+        cgstRate: isUsd ? 0 : (isIntraState ? gstRate / 2 : 0),
+        sgstRate: isUsd ? 0 : (isIntraState ? gstRate / 2 : 0),
+        igstRate: isUsd ? 0 : (isIntraState ? 0 : gstRate),
+        cgstAmount: isUsd ? 0 : parseFloat(item.cgst_amount || 0),
+        sgstAmount: isUsd ? 0 : parseFloat(item.sgst_amount || 0),
+        igstAmount: isUsd ? 0 : parseFloat(item.igst_amount || 0),
+        totalAmount: isUsd ? roundToTwo(taxableValue / rate) : totalAmount
+      };
+    });
+
+    const subtotal = parseFloat(fullInvoice.subtotal);
+    const grandTotal = parseFloat(fullInvoice.grand_total);
+
+    return {
+      invoiceNumber: fullInvoice.invoice_number,
+      invoiceDate: fullInvoice.invoice_date,
+      customerName: fullInvoice.customer_name,
+      customerPhone: fullInvoice.customer_phone,
+      customerGstin: fullInvoice.customer_gstin,
+      customerAddress: fullInvoice.customer_address,
+      shippingName: fullInvoice.shipping_name,
+      shippingPhone: fullInvoice.shipping_phone,
+      shippingAddress: fullInvoice.shipping_address,
+      placeOfSupply: fullInvoice.place_of_supply,
+      isUsdMode: isUsd,
+      usdRate: isUsd ? rate : null,
+      items: transformedItems,
+      subtotal: isUsd ? roundToTwo(subtotal / rate) : subtotal,
+      totalCgst: isUsd ? 0 : parseFloat(fullInvoice.total_cgst || 0),
+      totalSgst: isUsd ? 0 : parseFloat(fullInvoice.total_sgst || 0),
+      totalIgst: isUsd ? 0 : parseFloat(fullInvoice.total_igst || 0),
+      totalTaxAmount: isUsd ? 0 : parseFloat(fullInvoice.total_tax_amount || 0),
+      grandTotal: isUsd ? roundToTwo(subtotal / rate) : grandTotal,
+      isInterState: !isIntraState
+    };
+  };
+
   const handleViewInvoice = async (invoice) => {
     try {
       const { invoice: fullInvoice, items } = await getInvoiceById(invoice.id);
-      
-      const isIntraState = fullInvoice.place_of_supply === 'Karnataka';
-      
-      const transformedItems = items.map(item => {
-        const gstRate = parseFloat(item.gst_rate);
-        return {
-          description: item.description,
-          hsnSacCode: item.hsn_sac_code,
-          quantity: parseFloat(item.quantity),
-          unitPrice: parseFloat(item.unit_price),
-          taxableValue: parseFloat(item.taxable_value),
-          gstRate: gstRate,
-          cgstRate: isIntraState ? gstRate / 2 : 0,
-          sgstRate: isIntraState ? gstRate / 2 : 0,
-          igstRate: isIntraState ? 0 : gstRate,
-          cgstAmount: parseFloat(item.cgst_amount || 0),
-          sgstAmount: parseFloat(item.sgst_amount || 0),
-          igstAmount: parseFloat(item.igst_amount || 0),
-          totalAmount: parseFloat(item.total_amount)
-        };
-      });
-
-      const invoiceData = {
-        invoiceNumber: fullInvoice.invoice_number,
-        invoiceDate: fullInvoice.invoice_date,
-        customerName: fullInvoice.customer_name,
-        customerPhone: fullInvoice.customer_phone,
-        customerGstin: fullInvoice.customer_gstin,
-        customerAddress: fullInvoice.customer_address,
-        shippingName: fullInvoice.shipping_name,
-        shippingPhone: fullInvoice.shipping_phone,
-        shippingAddress: fullInvoice.shipping_address,
-        placeOfSupply: fullInvoice.place_of_supply,
-        items: transformedItems,
-        subtotal: parseFloat(fullInvoice.subtotal),
-        totalCgst: parseFloat(fullInvoice.total_cgst || 0),
-        totalSgst: parseFloat(fullInvoice.total_sgst || 0),
-        totalIgst: parseFloat(fullInvoice.total_igst || 0),
-        totalTaxAmount: parseFloat(fullInvoice.total_tax_amount || 0),
-        grandTotal: parseFloat(fullInvoice.grand_total),
-        isInterState: !isIntraState
-      };
-      
-      setViewingInvoice(invoiceData);
+      setViewingInvoice(transformInvoiceData(fullInvoice, items));
     } catch (error) {
       console.error('Error loading invoice:', error);
     }
@@ -105,48 +118,7 @@ const InvoiceHistory = () => {
   const handleDownloadInvoice = async (invoice) => {
     try {
       const { invoice: fullInvoice, items } = await getInvoiceById(invoice.id);
-      
-      const isIntraState = fullInvoice.place_of_supply === 'Karnataka';
-      
-      const transformedItems = items.map(item => {
-        const gstRate = parseFloat(item.gst_rate);
-        return {
-          description: item.description,
-          hsnSacCode: item.hsn_sac_code,
-          quantity: parseFloat(item.quantity),
-          unitPrice: parseFloat(item.unit_price),
-          taxableValue: parseFloat(item.taxable_value),
-          gstRate: gstRate,
-          cgstRate: isIntraState ? gstRate / 2 : 0,
-          sgstRate: isIntraState ? gstRate / 2 : 0,
-          igstRate: isIntraState ? 0 : gstRate,
-          cgstAmount: parseFloat(item.cgst_amount || 0),
-          sgstAmount: parseFloat(item.sgst_amount || 0),
-          igstAmount: parseFloat(item.igst_amount || 0),
-          totalAmount: parseFloat(item.total_amount)
-        };
-      });
-
-      const invoiceData = {
-        invoiceNumber: fullInvoice.invoice_number,
-        invoiceDate: fullInvoice.invoice_date,
-        customerName: fullInvoice.customer_name,
-        customerPhone: fullInvoice.customer_phone,
-        customerGstin: fullInvoice.customer_gstin,
-        customerAddress: fullInvoice.customer_address,
-        shippingName: fullInvoice.shipping_name,
-        shippingPhone: fullInvoice.shipping_phone,
-        shippingAddress: fullInvoice.shipping_address,
-        placeOfSupply: fullInvoice.place_of_supply,
-        items: transformedItems,
-        subtotal: parseFloat(fullInvoice.subtotal),
-        totalCgst: parseFloat(fullInvoice.total_cgst || 0),
-        totalSgst: parseFloat(fullInvoice.total_sgst || 0),
-        totalIgst: parseFloat(fullInvoice.total_igst || 0),
-        totalTaxAmount: parseFloat(fullInvoice.total_tax_amount || 0),
-        grandTotal: parseFloat(fullInvoice.grand_total),
-        isInterState: !isIntraState
-      };
+      const invoiceData = transformInvoiceData(fullInvoice, items);
 
       // Generate PDF blob and trigger download
       const blob = await pdf(<InvoicePdf invoiceData={invoiceData} />).toBlob();
@@ -256,7 +228,7 @@ const InvoiceHistory = () => {
                   <td className="invoice-number">{invoice.invoice_number}</td>
                   <td>{new Date(invoice.invoice_date).toLocaleDateString('en-IN')}</td>
                   <td>{invoice.customer_name}</td>
-                  <td className="amount">₹{parseFloat(invoice.grand_total).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                  <td className="amount">{invoice.currency_mode === 'USD' ? `$${(parseFloat(invoice.grand_total) / parseFloat(invoice.exchange_rate)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}` : `₹${parseFloat(invoice.grand_total).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`}</td>
                   <td className="actions-cell">
                     <button 
                       className="btn-view"
