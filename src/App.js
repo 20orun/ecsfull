@@ -15,6 +15,8 @@ import Invoice from './pages/Invoice';
 import InvoiceHistory from './pages/InvoiceHistory';
 import PurchaseOrder from './pages/PurchaseOrder';
 import PurchaseOrderHistory from './pages/PurchaseOrderHistory';
+import HealthNWealth from './pages/HealthNWealth';
+import HealthNWealthSupport from './pages/HealthNWealthSupport';
 import './App.css';
 
 const App = () => {
@@ -37,6 +39,8 @@ const App = () => {
             <Route path="/invoice-history" element={<InvoiceHistory />} />
             <Route path="/purchase-order" element={<PurchaseOrder />} />
             <Route path="/purchase-order-history" element={<PurchaseOrderHistory />} />
+            <Route path="/healthnwealth" element={<HealthNWealth />} />
+            <Route path="/healthnwealth/support" element={<HealthNWealthSupport />} />
           </Routes>
         </main>
         <Footer />
