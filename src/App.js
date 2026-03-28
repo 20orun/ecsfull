@@ -17,6 +17,7 @@ import PurchaseOrder from './pages/PurchaseOrder';
 import PurchaseOrderHistory from './pages/PurchaseOrderHistory';
 import HealthNWealth from './pages/HealthNWealth';
 import HealthNWealthSupport from './pages/HealthNWealthSupport';
+import HealthNWealthPrivacyPolicy from './pages/HealthNWealthPrivacyPolicy';
 import './App.css';
 
 const App = () => {
@@ -41,6 +42,7 @@ const App = () => {
             <Route path="/purchase-order-history" element={<PurchaseOrderHistory />} />
             <Route path="/healthnwealth" element={<HealthNWealth />} />
             <Route path="/healthnwealth/support" element={<HealthNWealthSupport />} />
+            <Route path="/healthnwealth/privacypolicy" element={<HealthNWealthPrivacyPolicy />} />
           </Routes>
         </main>
         <Footer />

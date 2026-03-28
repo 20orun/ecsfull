@@ -12,6 +12,7 @@ const HealthNWealth = () => {
           <p className="hnw-hero-sub">Book trusted health packages in just a few taps.</p>
           <div className="hnw-hero-buttons">
             <Link to="/healthnwealth/support" className="hnw-link-btn">Support</Link>
+            <Link to="/healthnwealth/privacypolicy" className="hnw-link-btn">Privacy Policy</Link>
           </div>
         </div>
       </section>

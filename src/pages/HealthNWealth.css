@@ -284,6 +284,84 @@
   color: #004d7a;
 }
 
+/* Privacy Policy */
+.hnw-privacy-section {
+  padding: 4rem 0;
+  background: white;
+}
+
+.hnw-privacy-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hnw-privacy-intro {
+  font-size: 1.1rem;
+  color: #5a6c7d;
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+}
+
+.hnw-privacy-block {
+  margin-bottom: 2.5rem;
+}
+
+.hnw-privacy-block h2 {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.hnw-privacy-block h3 {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+  margin-top: 1rem;
+}
+
+.hnw-privacy-block p {
+  color: #5a6c7d;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.hnw-privacy-block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.hnw-privacy-block ul li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #5a6c7d;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.hnw-privacy-block ul li::before {
+  content: '•';
+  position: absolute;
+  left: 0.25rem;
+  color: #008170;
+  font-weight: bold;
+}
+
+.hnw-privacy-block a {
+  color: #008170;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.hnw-privacy-block a:hover {
+  color: #004d7a;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .hnw-hero-content h1 {
