@@ -18,6 +18,7 @@ import PurchaseOrderHistory from './pages/PurchaseOrderHistory';
 import HealthNWealth from './pages/HealthNWealth';
 import HealthNWealthSupport from './pages/HealthNWealthSupport';
 import HealthNWealthPrivacyPolicy from './pages/HealthNWealthPrivacyPolicy';
+import HealthNWealthDeleteAccount from './pages/HealthNWealthDeleteAccount';
 import './App.css';
 
 const App = () => {
@@ -43,6 +44,7 @@ const App = () => {
             <Route path="/healthnwealth" element={<HealthNWealth />} />
             <Route path="/healthnwealth/support" element={<HealthNWealthSupport />} />
             <Route path="/healthnwealth/privacypolicy" element={<HealthNWealthPrivacyPolicy />} />
+            <Route path="/healthnwealth/delete-account" element={<HealthNWealthDeleteAccount />} />
           </Routes>
         </main>
         <Footer />

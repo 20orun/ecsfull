@@ -44,7 +44,7 @@ const HealthNWealthSupport = () => {
     },
     {
       q: 'How do I delete my account?',
-      a: 'Email us at info@excelcare.us with your registered email and we will process your request.'
+      a: null
     }
   ];
 
@@ -80,7 +80,11 @@ const HealthNWealthSupport = () => {
                 </button>
                 {openFaq === index && (
                   <div className="hnw-faq-answer">
-                    <p>A: {faq.a}</p>
+                    {faq.a ? (
+                      <p>A: {faq.a}</p>
+                    ) : (
+                      <p>A: You can delete your account from the app or by contacting us. Visit our <Link to="/healthnwealth/delete-account">Delete Account</Link> page for detailed steps.</p>
+                    )}
                   </div>
                 )}
               </div>
