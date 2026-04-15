@@ -1,5 +1,4 @@
 import { supabase } from '../lib/supabase';
-import { FIRM_CONFIG } from '../config/firmConfig';
 import { getFinancialYear, validateInvoiceNumber } from '../utils/invoiceUtils';
 
 /**
