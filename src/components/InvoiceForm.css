@@ -623,3 +623,33 @@
   font-weight: 500;
   font-style: italic;
 }
+
+.usd-entry-mode {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.usd-entry-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #555;
+  background: #f0f0f0;
+  transition: all 0.2s ease;
+}
+
+.usd-entry-option.active {
+  background: #3498db;
+  color: white;
+  font-weight: 600;
+}
+
+.usd-entry-option input[type="radio"] {
+  accent-color: #3498db;
+}

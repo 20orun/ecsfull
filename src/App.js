@@ -15,10 +15,12 @@ import Invoice from './pages/Invoice';
 import InvoiceHistory from './pages/InvoiceHistory';
 import PurchaseOrder from './pages/PurchaseOrder';
 import PurchaseOrderHistory from './pages/PurchaseOrderHistory';
-import HealthNWealth from './pages/HealthNWealth';
-import HealthNWealthSupport from './pages/HealthNWealthSupport';
-import HealthNWealthPrivacyPolicy from './pages/HealthNWealthPrivacyPolicy';
-import HealthNWealthDeleteAccount from './pages/HealthNWealthDeleteAccount';
+import ConfirmedInvoice from './pages/ConfirmedInvoice';
+import ConfirmedInvoiceHistory from './pages/ConfirmedInvoiceHistory';
+import Healthix from './pages/Healthix';
+import HealthixSupport from './pages/HealthixSupport';
+import HealthixPrivacyPolicy from './pages/HealthixPrivacyPolicy';
+import HealthixDeleteAccount from './pages/HealthixDeleteAccount';
 import './App.css';
 
 const App = () => {
@@ -41,10 +43,12 @@ const App = () => {
             <Route path="/invoice-history" element={<InvoiceHistory />} />
             <Route path="/purchase-order" element={<PurchaseOrder />} />
             <Route path="/purchase-order-history" element={<PurchaseOrderHistory />} />
-            <Route path="/healthnwealth" element={<HealthNWealth />} />
-            <Route path="/healthnwealth/support" element={<HealthNWealthSupport />} />
-            <Route path="/healthnwealth/privacypolicy" element={<HealthNWealthPrivacyPolicy />} />
-            <Route path="/healthnwealth/delete-account" element={<HealthNWealthDeleteAccount />} />
+            <Route path="/confirmed-invoice" element={<ConfirmedInvoice />} />
+            <Route path="/confirmed-invoice-history" element={<ConfirmedInvoiceHistory />} />
+            <Route path="/healthix" element={<Healthix />} />
+            <Route path="/healthix/support" element={<HealthixSupport />} />
+            <Route path="/healthix/privacypolicy" element={<HealthixPrivacyPolicy />} />
+            <Route path="/healthix/delete-account" element={<HealthixDeleteAccount />} />
           </Routes>
         </main>
         <Footer />

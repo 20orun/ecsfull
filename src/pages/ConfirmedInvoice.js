@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { supabase } from '../lib/supabase';
-import InvoiceForm from '../components/InvoiceForm';
-import InvoicePdf from '../components/InvoicePdf';
-import InvoicePreview from '../components/InvoicePreview';
+import ConfirmedInvoiceForm from '../components/ConfirmedInvoiceForm';
+import ConfirmedInvoicePdf from '../components/ConfirmedInvoicePdf';
+import ConfirmedInvoicePreview from '../components/ConfirmedInvoicePreview';
 import { calculateInvoiceTotals, roundToTwo } from '../utils/invoiceUtils';
-import { saveInvoice, getInvoices, getNextInvoiceNumber, getInvoiceById, commitNextInvoiceNumber } from '../services/invoiceService';
+import { saveConfirmedInvoice, getConfirmedInvoices, getNextConfirmedInvoiceNumber, getConfirmedInvoiceById, commitNextConfirmedInvoiceNumber } from '../services/confirmedInvoiceService';
 import './Invoice.css';
 
-const Invoice = () => {
+const ConfirmedInvoice = () => {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,6 @@ const Invoice = () => {
   const [viewingInvoice, setViewingInvoice] = useState(null);
 
   useEffect(() => {
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -29,7 +28,6 @@ const Invoice = () => {
       }
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -41,7 +39,6 @@ const Invoice = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Reset to form view when navigating to this page via nav link
   useEffect(() => {
     setSavedInvoice(null);
     setMessage({ type: '', text: '' });
@@ -49,26 +46,25 @@ const Invoice = () => {
 
   const fetchNextInvoiceNumber = async () => {
     try {
-      const { invoiceNumber, sequenceNumber, financialYear } = await getNextInvoiceNumber();
+      const { invoiceNumber, sequenceNumber, financialYear } = await getNextConfirmedInvoiceNumber();
       setNextInvoiceNumber({ invoiceNumber, sequenceNumber, financialYear });
     } catch (error) {
-      console.error('Error fetching next invoice number:', error);
-      // Fallback will be handled by the form's default value
+      console.error('Error fetching next confirmed invoice number:', error);
     }
   };
 
   const fetchRecentInvoices = async () => {
     try {
-      const data = await getInvoices({ limit: 5 });
+      const data = await getConfirmedInvoices({ limit: 5 });
       setRecentInvoices(data || []);
     } catch (error) {
-      console.error('Error fetching invoices:', error);
+      console.error('Error fetching confirmed invoices:', error);
     }
   };
 
   const handleFormSubmit = async (formData) => {
     if (!user) {
-      setMessage({ type: 'error', text: 'Please sign in to create invoices' });
+      setMessage({ type: 'error', text: 'Please sign in to create confirmed invoices' });
       return;
     }
 
@@ -143,11 +139,8 @@ const Invoice = () => {
         }
       }
 
-      // Commit the invoice number (this increments the sequence atomically)
-      const { invoiceNumber, sequenceNumber } = await commitNextInvoiceNumber();
+      const { invoiceNumber, sequenceNumber } = await commitNextConfirmedInvoiceNumber();
 
-      // Prepare complete invoice data with committed invoice number
-      // Always store INR values in the database
       const invoiceData = {
         invoiceNumber: invoiceNumber,
         sequenceNumber: sequenceNumber,
@@ -166,10 +159,8 @@ const Invoice = () => {
         ...calculatedData
       };
 
-      // Save to Supabase using the service
-      await saveInvoice(invoiceData);
+      await saveConfirmedInvoice(invoiceData);
 
-      // Prepare data for PDF with the committed invoice number
       const pdfData = {
         ...formData,
         invoiceNumber: invoiceNumber,
@@ -180,20 +171,18 @@ const Invoice = () => {
       };
 
       setSavedInvoice(pdfData);
-      setMessage({ type: 'success', text: 'Invoice saved successfully!' });
+      setMessage({ type: 'success', text: 'Confirmed invoice saved successfully!' });
       
-      // Scroll to top to show success message
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
-      // Refresh data
       fetchRecentInvoices();
       fetchNextInvoiceNumber();
 
     } catch (error) {
-      console.error('Error saving invoice:', error);
+      console.error('Error saving confirmed invoice:', error);
       setMessage({ 
         type: 'error', 
-        text: error.message || 'Failed to save invoice. Please try again.' 
+        text: error.message || 'Failed to save confirmed invoice. Please try again.' 
       });
     } finally {
       setLoading(false);
@@ -205,25 +194,21 @@ const Invoice = () => {
     setMessage({ type: '', text: '' });
   };
 
-  // View current saved invoice
   const handleViewCurrentInvoice = () => {
     if (savedInvoice) {
       setViewingInvoice(savedInvoice);
     }
   };
 
-  // View invoice from history
   // eslint-disable-next-line no-unused-vars
   const handleViewHistoryInvoice = async (invoice) => {
     try {
-      // Fetch full invoice data including items
-      const { invoice: fullInvoice, items } = await getInvoiceById(invoice.id);
+      const { invoice: fullInvoice, items } = await getConfirmedInvoiceById(invoice.id);
       
       const isIntraState = fullInvoice.place_of_supply === 'Karnataka';
       const isUsd = fullInvoice.currency_mode === 'USD';
       const rate = fullInvoice.exchange_rate ? parseFloat(fullInvoice.exchange_rate) : 1;
       
-      // DB stores INR values; convert to USD for display if needed
       const transformedItems = items.map(item => {
         const gstRate = parseFloat(item.gst_rate);
         const unitPrice = parseFloat(item.unit_price);
@@ -249,7 +234,6 @@ const Invoice = () => {
       const subtotal = parseFloat(fullInvoice.subtotal);
       const grandTotal = parseFloat(fullInvoice.grand_total);
 
-      // Transform data to match the format expected by InvoicePreview
       const invoiceData = {
         invoiceNumber: fullInvoice.invoice_number,
         invoiceDate: fullInvoice.invoice_date,
@@ -275,23 +259,21 @@ const Invoice = () => {
       
       setViewingInvoice(invoiceData);
     } catch (error) {
-      console.error('Error loading invoice:', error);
-      setMessage({ type: 'error', text: 'Failed to load invoice details' });
+      console.error('Error loading confirmed invoice:', error);
+      setMessage({ type: 'error', text: 'Failed to load confirmed invoice details' });
     }
   };
 
-  // Close preview
   const handleClosePreview = () => {
     setViewingInvoice(null);
   };
 
-  // If not logged in, show login prompt
   if (!user) {
     return (
       <div className="invoice-page">
         <div className="auth-required">
           <h2>Authentication Required</h2>
-          <p>Please sign in to access the Invoice Generator.</p>
+          <p>Please sign in to access the Confirmed Invoice Generator.</p>
           <a href="/login" className="btn-signin">Sign In</a>
         </div>
       </div>
@@ -301,8 +283,8 @@ const Invoice = () => {
   return (
     <div className="invoice-page">
       <div className="invoice-header">
-        <h1>Invoice Generator</h1>
-        <p>Create GST compliant invoices for Excel Care Solutions</p>
+        <h1>Confirmed Invoice Generator</h1>
+        <p>Create GST compliant confirmed invoices for Excel Care Solutions</p>
       </div>
 
       {message.text && (
@@ -315,28 +297,28 @@ const Invoice = () => {
         <div className="invoice-success">
           <div className="success-content">
             <div className="success-icon">✓</div>
-            <h2>Invoice Created Successfully!</h2>
+            <h2>Confirmed Invoice Created Successfully!</h2>
             <p>Invoice Number: <strong>{savedInvoice.invoiceNumber}</strong></p>
             <p>Customer: <strong>{savedInvoice.customerName}</strong></p>
             <p>Grand Total: <strong>{savedInvoice.isUsdMode ? '$' : '₹'}{savedInvoice.grandTotal.toFixed(2)}</strong></p>
             
             <div className="success-actions">
               <button className="btn-view" onClick={handleViewCurrentInvoice}>
-                View Invoice
+                View Confirmed Invoice
               </button>
               
               <PDFDownloadLink
-                document={<InvoicePdf invoiceData={savedInvoice} />}
-                fileName={`Invoice_${savedInvoice.invoiceNumber.replace(/\//g, '_')}.pdf`}
+                document={<ConfirmedInvoicePdf invoiceData={savedInvoice} />}
+                fileName={`Confirmed_Invoice_${savedInvoice.invoiceNumber.replace(/\//g, '_')}.pdf`}
                 className="btn-download"
               >
                 {({ loading: pdfLoading }) =>
-                  pdfLoading ? 'Generating PDF...' : 'Download PDF Invoice'
+                  pdfLoading ? 'Generating PDF...' : 'Download PDF Confirmed Invoice'
                 }
               </PDFDownloadLink>
               
               <button className="btn-new" onClick={handleNewInvoice}>
-                Create New Invoice
+                Create New Confirmed Invoice
               </button>
             </div>
           </div>
@@ -344,7 +326,7 @@ const Invoice = () => {
       ) : (
         <div className="invoice-content">
           <div className="form-container">
-            <InvoiceForm 
+            <ConfirmedInvoiceForm 
               onSubmit={handleFormSubmit} 
               loading={loading}
               initialInvoiceNumber={nextInvoiceNumber?.invoiceNumber}
@@ -353,9 +335,8 @@ const Invoice = () => {
         </div>
       )}
 
-      {/* Invoice Preview Modal */}
       {viewingInvoice && (
-        <InvoicePreview 
+        <ConfirmedInvoicePreview 
           invoiceData={viewingInvoice} 
           onClose={handleClosePreview} 
         />
@@ -364,4 +345,4 @@ const Invoice = () => {
   );
 };
 
-export default Invoice;
+export default ConfirmedInvoice;

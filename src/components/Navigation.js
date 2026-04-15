@@ -116,6 +116,20 @@ const Navigation = () => {
                 Invoice History
               </Link>
               <Link 
+                to="/confirmed-invoice" 
+                className={`nav-link ${isActive('/confirmed-invoice')}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Confirmed Invoice
+              </Link>
+              <Link 
+                to="/confirmed-invoice-history" 
+                className={`nav-link ${isActive('/confirmed-invoice-history')}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Confirmed Invoice History
+              </Link>
+              <Link 
                 to="/purchase-order" 
                 className={`nav-link ${isActive('/purchase-order')}`}
                 onClick={() => setIsMenuOpen(false)}

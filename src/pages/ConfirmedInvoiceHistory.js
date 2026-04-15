@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { pdf } from '@react-pdf/renderer';
 import { supabase } from '../lib/supabase';
-import InvoicePreview from '../components/InvoicePreview';
-import InvoicePdf from '../components/InvoicePdf';
+import ConfirmedInvoicePreview from '../components/ConfirmedInvoicePreview';
+import ConfirmedInvoicePdf from '../components/ConfirmedInvoicePdf';
 import { roundToTwo } from '../utils/invoiceUtils';
-import { getInvoices, getInvoiceById } from '../services/invoiceService';
+import { getConfirmedInvoices, getConfirmedInvoiceById } from '../services/confirmedInvoiceService';
 import './InvoiceHistory.css';
 
-const InvoiceHistory = () => {
+const ConfirmedInvoiceHistory = () => {
   const [user, setUser] = useState(null);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +16,6 @@ const InvoiceHistory = () => {
   const [filterYear, setFilterYear] = useState('all');
 
   useEffect(() => {
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -24,7 +23,6 @@ const InvoiceHistory = () => {
       }
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -38,10 +36,10 @@ const InvoiceHistory = () => {
   const fetchInvoices = async () => {
     setLoading(true);
     try {
-      const data = await getInvoices({ limit: 100 });
+      const data = await getConfirmedInvoices({ limit: 100 });
       setInvoices(data || []);
     } catch (error) {
-      console.error('Error fetching invoices:', error);
+      console.error('Error fetching confirmed invoices:', error);
     } finally {
       setLoading(false);
     }
@@ -52,7 +50,6 @@ const InvoiceHistory = () => {
     const isUsd = fullInvoice.currency_mode === 'USD';
     const rate = fullInvoice.exchange_rate ? parseFloat(fullInvoice.exchange_rate) : 1;
 
-    // DB stores INR values; convert to USD for display if needed
     const transformedItems = items.map(item => {
       const gstRate = parseFloat(item.gst_rate);
       const unitPrice = parseFloat(item.unit_price);
@@ -104,10 +101,10 @@ const InvoiceHistory = () => {
 
   const handleViewInvoice = async (invoice) => {
     try {
-      const { invoice: fullInvoice, items } = await getInvoiceById(invoice.id);
+      const { invoice: fullInvoice, items } = await getConfirmedInvoiceById(invoice.id);
       setViewingInvoice(transformInvoiceData(fullInvoice, items));
     } catch (error) {
-      console.error('Error loading invoice:', error);
+      console.error('Error loading confirmed invoice:', error);
     }
   };
 
@@ -117,28 +114,25 @@ const InvoiceHistory = () => {
 
   const handleDownloadInvoice = async (invoice) => {
     try {
-      const { invoice: fullInvoice, items } = await getInvoiceById(invoice.id);
+      const { invoice: fullInvoice, items } = await getConfirmedInvoiceById(invoice.id);
       const invoiceData = transformInvoiceData(fullInvoice, items);
 
-      // Generate PDF blob and trigger download
-      const blob = await pdf(<InvoicePdf invoiceData={invoiceData} />).toBlob();
+      const blob = await pdf(<ConfirmedInvoicePdf invoiceData={invoiceData} />).toBlob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `Invoice_${fullInvoice.invoice_number.replace(/\//g, '_')}.pdf`;
+      link.download = `Confirmed_Invoice_${fullInvoice.invoice_number.replace(/\//g, '_')}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error downloading invoice:', error);
+      console.error('Error downloading confirmed invoice:', error);
     }
   };
 
-  // Get unique financial years from invoices
   const financialYears = [...new Set(invoices.map(inv => inv.financial_year))].sort().reverse();
 
-  // Filter invoices
   const filteredInvoices = invoices.filter(invoice => {
     const matchesSearch = 
       invoice.invoice_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -147,13 +141,12 @@ const InvoiceHistory = () => {
     return matchesSearch && matchesYear;
   });
 
-  // If not logged in, show login prompt
   if (!user) {
     return (
       <div className="invoice-history-page">
         <div className="auth-required">
           <h2>Authentication Required</h2>
-          <p>Please sign in to view invoice history.</p>
+          <p>Please sign in to view confirmed invoice history.</p>
           <a href="/login" className="btn-signin">Sign In</a>
         </div>
       </div>
@@ -163,8 +156,8 @@ const InvoiceHistory = () => {
   return (
     <div className="invoice-history-page">
       <div className="history-header">
-        <h1>Invoice History</h1>
-        <p>View and manage all generated invoices</p>
+        <h1>Confirmed Invoice History</h1>
+        <p>View and manage all generated confirmed invoices</p>
       </div>
 
       <div className="history-filters">
@@ -192,11 +185,11 @@ const InvoiceHistory = () => {
       <div className="history-stats">
         <div className="stat-card">
           <span className="stat-value">{filteredInvoices.length}</span>
-          <span className="stat-label">Total Invoices</span>
+          <span className="stat-label">Total Confirmed Invoices</span>
         </div>
         <div className="stat-card">
           <span className="stat-value">
-            ₹{filteredInvoices.reduce((sum, inv) => sum + (parseFloat(inv.grand_total) || 0), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+            ₹{filteredInvoices.reduce((sum, inv) => sum + parseFloat(inv.grand_total), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </span>
           <span className="stat-label">Total Revenue</span>
         </div>
@@ -204,11 +197,11 @@ const InvoiceHistory = () => {
 
       {loading ? (
         <div className="loading-state">
-          <p>Loading invoices...</p>
+          <p>Loading confirmed invoices...</p>
         </div>
       ) : filteredInvoices.length === 0 ? (
         <div className="empty-state">
-          <p>No invoices found.</p>
+          <p>No confirmed invoices found.</p>
         </div>
       ) : (
         <div className="invoices-table-container">
@@ -228,7 +221,7 @@ const InvoiceHistory = () => {
                   <td className="invoice-number">{invoice.invoice_number}</td>
                   <td>{new Date(invoice.invoice_date).toLocaleDateString('en-IN')}</td>
                   <td>{invoice.customer_name}</td>
-                  <td className="amount">{invoice.currency_mode === 'USD' ? `$${(parseFloat(invoice.grand_total) / (parseFloat(invoice.exchange_rate) || 1)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : `₹${(parseFloat(invoice.grand_total) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}</td>
+                  <td className="amount">{invoice.currency_mode === 'USD' ? `$${(parseFloat(invoice.grand_total) / parseFloat(invoice.exchange_rate)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}` : `₹${parseFloat(invoice.grand_total).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`}</td>
                   <td className="actions-cell">
                     <button 
                       className="btn-view"
@@ -250,9 +243,8 @@ const InvoiceHistory = () => {
         </div>
       )}
 
-      {/* Invoice Preview Modal */}
       {viewingInvoice && (
-        <InvoicePreview 
+        <ConfirmedInvoicePreview 
           invoiceData={viewingInvoice} 
           onClose={handleClosePreview} 
         />
@@ -261,4 +253,4 @@ const InvoiceHistory = () => {
   );
 };
 
-export default InvoiceHistory;
+export default ConfirmedInvoiceHistory;

@@ -11,10 +11,8 @@ import {
 } from '../utils/invoiceUtils';
 import './InvoiceForm.css';
 
-const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
-  // Track which items have been added to the bill
+const ConfirmedInvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
   const [billedItems, setBilledItems] = useState([]);
-  // Track if shipping address is same as billing
   const [sameAsShipping, setSameAsShipping] = useState(false);
   const [isUsdMode, setIsUsdMode] = useState(false);
   const [usdRate, setUsdRate] = useState('94');
@@ -49,7 +47,6 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
     defaultValues
   });
 
-  // Update invoice number when it comes from Supabase
   useEffect(() => {
     if (initialInvoiceNumber) {
       setValue('invoiceNumber', initialInvoiceNumber);
@@ -73,7 +70,6 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
     return roundToTwo(inrAmount / rate);
   }, [isUsdMode, usdRate]);
 
-  // Calculate totals based only on billed items
   const totals = useMemo(() => {
     if (billedItems.length === 0) {
       return {
@@ -133,17 +129,14 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
     return result;
   }, [billedItems, watchPlaceOfSupply, isUsdMode, usdRate, directUsdEntry]);
 
-  // Check if an item is already billed (by index in form)
   const isItemBilled = useCallback((index) => {
     return billedItems.some(item => item.formIndex === index);
   }, [billedItems]);
 
-  // Add item to bill
   const addToBill = useCallback((index) => {
     const items = getValues('items');
     const item = items[index];
     
-    // Validate item has required fields
     if (!item.description || !item.hsnSacCode || !item.quantity || !item.unitPrice) {
       alert('Please fill in all item fields before adding to bill');
       return;
@@ -160,12 +153,10 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
     setBilledItems(prev => [...prev, billedItem]);
   }, [getValues]);
 
-  // Update item in bill
   const updateInBill = useCallback((index) => {
     const items = getValues('items');
     const item = items[index];
     
-    // Validate item has required fields
     if (!item.description || !item.hsnSacCode || !item.quantity || !item.unitPrice) {
       alert('Please fill in all item fields before updating');
       return;
@@ -184,21 +175,16 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
     ));
   }, [getValues]);
 
-  // Remove item from bill
   const removeFromBill = useCallback((index) => {
     setBilledItems(prev => prev.filter(item => item.formIndex !== index));
   }, []);
 
-  // Remove item row entirely
   const removeItemRow = useCallback((index) => {
-    // First remove from billed items if it exists
     removeFromBill(index);
-    // Update formIndex for items after this one
     setBilledItems(prev => prev.map(item => ({
       ...item,
       formIndex: item.formIndex > index ? item.formIndex - 1 : item.formIndex
     })));
-    // Remove from form
     remove(index);
   }, [remove, removeFromBill]);
 
@@ -207,19 +193,16 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
   }, [append]);
 
   const handleFormSubmit = useCallback((data) => {
-    // Validate GSTIN if provided
     if (data.customerGstin && !validateGSTIN(data.customerGstin)) {
       alert('Invalid GSTIN format');
       return;
     }
 
-    // Check if there are any billed items
     if (billedItems.length === 0) {
-      alert('Please add at least one item to the bill before generating invoice');
+      alert('Please add at least one item to the bill before generating confirmed invoice');
       return;
     }
 
-    // Prepare data with calculated values using only billed items
     const invoiceData = {
       ...data,
       isUsdMode,
@@ -265,7 +248,7 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
       <form onSubmit={handleSubmit(handleFormSubmit)} className="invoice-form">
         {/* Invoice Details */}
         <div className="form-section">
-          <h3>Invoice Details</h3>
+          <h3>Confirmed Invoice Details</h3>
           <div className="form-row">
             <div className="form-group">
               <label>Invoice Number *</label>
@@ -343,7 +326,7 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
               <div className="checkbox-group">
                 <input
                   type="checkbox"
-                  id="sameAsShipping"
+                  id="sameAsShippingConfirmed"
                   checked={sameAsShipping}
                   onChange={(e) => {
                     setSameAsShipping(e.target.checked);
@@ -354,7 +337,7 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
                     }
                   }}
                 />
-                <label htmlFor="sameAsShipping">Shipping address same as billing address</label>
+                <label htmlFor="sameAsShippingConfirmed">Shipping address same as billing address</label>
               </div>
             </div>
           </div>
@@ -456,7 +439,7 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
                 <label className={`usd-entry-option ${!directUsdEntry ? 'active' : ''}`}>
                   <input
                     type="radio"
-                    name="usdEntryMode"
+                    name="usdEntryModeConfirmed"
                     checked={!directUsdEntry}
                     onChange={() => setDirectUsdEntry(false)}
                   />
@@ -465,7 +448,7 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
                 <label className={`usd-entry-option ${directUsdEntry ? 'active' : ''}`}>
                   <input
                     type="radio"
-                    name="usdEntryMode"
+                    name="usdEntryModeConfirmed"
                     checked={directUsdEntry}
                     onChange={() => setDirectUsdEntry(true)}
                   />
@@ -481,7 +464,7 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
 
         {/* Line Items */}
         <div className="form-section">
-          <h3>Invoice Items</h3>
+          <h3>Confirmed Invoice Items</h3>
           <div className={`items-table ${isUsdMode ? 'usd-items' : ''}`}>
             <div className="items-header">
               <span className="col-desc">Description</span>
@@ -618,7 +601,7 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
 
         {/* Totals Summary */}
         <div className="form-section totals-section">
-          <h3>Invoice Summary</h3>
+          <h3>Confirmed Invoice Summary</h3>
           {billedItems.length === 0 ? (
             <p className="no-items-message">No items added to bill yet. Click "Add to Bill" on items above.</p>
           ) : (
@@ -689,7 +672,7 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
             Reset Form
           </button>
           <button type="submit" className="btn-submit" disabled={loading || billedItems.length === 0}>
-            {loading ? 'Saving...' : 'Generate Invoice'}
+            {loading ? 'Saving...' : 'Generate Confirmed Invoice'}
           </button>
         </div>
       </form>
@@ -697,4 +680,4 @@ const InvoiceForm = ({ onSubmit, loading, initialInvoiceNumber }) => {
   );
 };
 
-export default InvoiceForm;
+export default ConfirmedInvoiceForm;
