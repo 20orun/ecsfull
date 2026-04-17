@@ -7,7 +7,7 @@ export const FIRM_CONFIG = {
   gstin: '32AAMFE1322R1ZB', // Replace with actual GSTIN
   state: 'Kerala', // Firm's state for CGST/SGST vs IGST determination
   stateCode: '32', // Kerala state code
-  phone: '+91 9446360977',
+  phone: '+91 4844547088',
   email: 'info@excelcare.us',
   website: 'www.excelcare.us',
   // Invoice number prefix (max 3-4 chars recommended to stay within 16 char limit)
