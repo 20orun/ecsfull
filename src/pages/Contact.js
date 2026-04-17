@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
+import { FIRM_CONFIG } from '../config/firmConfig';
 import './Contact.css';
 
 const Contact = () => {
@@ -267,9 +268,9 @@ const Contact = () => {
                 <h3>India</h3>
                 <div className="location-details">
                   <p><strong>Address:</strong></p>
-                  <p>Business Centre, Near Lulu Mall,<br />
-                     Cochin, Kerala, India</p>
-                  <p><strong>Email:</strong> info@excelcare.us</p>
+                  <p>{FIRM_CONFIG.address}</p>
+                  <p><strong>Phone:</strong> {FIRM_CONFIG.phone}</p>
+                  <p><strong>Email:</strong> {FIRM_CONFIG.email}</p>
                 </div>
               </div>
             </div>
