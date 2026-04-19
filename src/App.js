@@ -18,6 +18,7 @@ import PurchaseOrderHistory from './pages/PurchaseOrderHistory';
 import ConfirmedInvoice from './pages/ConfirmedInvoice';
 import ConfirmedInvoiceHistory from './pages/ConfirmedInvoiceHistory';
 import Healthix from './pages/Healthix';
+import HealthixAppRedirect from './pages/HealthixAppRedirect';
 import HealthixSupport from './pages/HealthixSupport';
 import HealthixPrivacyPolicy from './pages/HealthixPrivacyPolicy';
 import HealthixDeleteAccount from './pages/HealthixDeleteAccount';
@@ -46,6 +47,7 @@ const App = () => {
             <Route path="/confirmed-invoice" element={<ConfirmedInvoice />} />
             <Route path="/confirmed-invoice-history" element={<ConfirmedInvoiceHistory />} />
             <Route path="/healthix" element={<Healthix />} />
+            <Route path="/healthix/download" element={<HealthixAppRedirect />} />
             <Route path="/healthix/support" element={<HealthixSupport />} />
             <Route path="/healthix/privacypolicy" element={<HealthixPrivacyPolicy />} />
             <Route path="/healthix/delete-account" element={<HealthixDeleteAccount />} />
